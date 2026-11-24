@@ -2,3 +2,5 @@
 .verification{padding-left:22px}.verification li{padding:8px 0}.verification li p{margin:4px 0}.verification li a{font-weight:650}@media(max-width:550px){.workspace-actions button{flex:1;padding:10px}.hero-copy h1{font-size:clamp(49px,13vw,66px)}}
 .deal-findings{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.deal-findings div{padding:14px;border:1px solid var(--line);border-radius:8px}.deal-findings dt{font-size:12px;color:var(--grey);font-weight:650}.deal-findings dd{margin:5px 0 0;font-weight:700}
 .history-form{display:grid;gap:12px;max-width:620px}.history-form label{display:grid;gap:4px;font-weight:650}.history-form input,.history-form textarea,.history-form select{font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:white;color:var(--ink)}.history-form textarea{min-height:74px;resize:vertical}.history-form button{justify-self:start}
+
+.workspace-actions[hidden]{display:none}

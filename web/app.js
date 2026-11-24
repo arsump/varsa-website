@@ -1,3 +1,4 @@
+import {matchBryanAddress} from '../src/acquisition.mjs';
 import {matchesPierAddress,daysAfterEvent} from '../src/recovery.mjs';
 import {assembleResilience} from '../src/core-record.mjs';
 import {evidenceEntry,evidenceTypes,readHistory,writeHistory} from '../src/property-history.mjs';
@@ -64,7 +65,7 @@ function route(){
  for(const r of routes)$(r).hidden=r!==id;
  document.querySelectorAll('.top nav a').forEach(a=>a.setAttribute('aria-current',a.hash==='#'+id?'page':'false'));
  if(id==='home'){initHome();requestAnimationFrame(()=>homeMap.invalidateSize())}
- if(id==='acquire'){initExplorer();requestAnimationFrame(()=>explorerMap.invalidateSize())}
+ if(id==='acquire'&&!$('general-acquisition').hidden){initExplorer();requestAnimationFrame(()=>explorerMap.invalidateSize())}
  window.scrollTo(0,0);
 }
 window.addEventListener('hashchange',route);
@@ -211,6 +212,19 @@ function renderPortfolio(){
  $('save-property').textContent=portfolio.has(selected.id)?'✓ In portfolio':'＋ Add to portfolio';
 }
 const messages={invalid:'Enter a Fort Collins street address including a house number.',ambiguous:'Multiple exact address matches. Add unit or building details.',not_found:'No exact address found. Check spelling and street suffix.',no_point:'Address matched, but coordinates are unavailable.',outside_city:'Address is outside the Fort Collins municipal boundary.'};
+function showBryanAcquisition(address){
+ const planning='https://accela-aca.fcgov.com/CitizenAccess/Cap/CapDetail.aspx?Module=Planning&TabName=Planning&agencyCode=FTCOLLINS&capID1=22CAP&capID2=00000&capID3=0008A';
+ $('bryan-acquisition').innerHTML=card('Village on Bryan · Acquisition evidence',
+  '<p>'+esc(address)+' · Fort Collins, Colorado · Multifamily example</p>'+
+  '<div class="grid two">'+
+  card('Approved scope','<p>The city approved a renovation scope including new asphalt-shingle roofing and gutters at 100, 106 and 114 S Bryan Ave.</p><p>'+sourceLink(planning,'City planning record MA220020')+'</p>')+
+  card('Reported renovation','<p>Housing Catalyst reports the community was renovated in 2023. Roof-specific completion remains unknown.</p><p>'+sourceLink('https://housingcatalyst.com/apartments/village-on-bryan/','Housing Catalyst property record')+'</p>')+
+  card('Pre-close decision','<p>Keep a roof reserve open for each building until roof completion and current condition are established. The approved scope identifies which three buildings to review.</p>')+
+  card('Evidence gaps','<p>Final roof inspection, installed product and impact rating, current condition, and storm-related damage or repairs remain unknown.</p><p>The city’s current-permit feed returned zero rows for these addresses in the November 24, 2026 search. Historical coverage remains unverified.</p>')+'</div>');
+ $('bryan-acquisition').hidden=false;
+ $('general-acquisition').hidden=true;
+ document.querySelector('#acquire .workspace-actions').hidden=true;
+}
 async function lookup(value){
  if(matchesPierAddress(value)){
   ++searchVersion;
@@ -218,11 +232,24 @@ async function lookup(value){
   return;
  }
  const version=++searchVersion;$('query').value=value;
+ const bryanAddress=matchBryanAddress(value);
+ if(bryanAddress){
+  $('lookup-status').textContent='';
+  showBryanAcquisition(bryanAddress);
+  return;
+ }
  $('lookup-status').innerHTML='<div class="notice">Checking official address, parcel and boundary services…</div>';
  try{
   const local=matchSite(value,sites);const response=local?{status:'found',site:local}:await resolveAddress(value);
   if(version!==searchVersion)return;
-  if(response.status==='found'){$('lookup-status').innerHTML='';selectSite(response.site)}else $('lookup-status').innerHTML='<div class="notice">'+esc(messages[response.status])+' The previous record is retained.</div>';
+  if(response.status==='found'){
+   $('lookup-status').textContent='';
+   $('bryan-acquisition').hidden=true;
+   $('general-acquisition').hidden=false;
+   document.querySelector('#acquire .workspace-actions').hidden=false;
+   initExplorer();selectSite(response.site);
+   requestAnimationFrame(()=>explorerMap.invalidateSize());
+  }else $('lookup-status').innerHTML='<div class="notice">'+esc(messages[response.status])+' The previous record is retained.</div>';
  }catch(e){if(version===searchVersion)$('lookup-status').innerHTML='<div class="notice">Government GIS temporarily unavailable. Try again or choose City Hall.</div>'}
 }
 $('lookup').addEventListener('submit',e=>{e.preventDefault();lookup($('query').value)});
