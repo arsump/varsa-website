@@ -1,0 +1,204 @@
+{
+  "snapshot": "November 1, 2020",
+  "bulletin": "https://www.alapark.com/sites/default/files/2020-11/Visitor%20Need%20to%20Know_201106.pdf",
+  "facilities": [
+    {
+      "name": "Park headquarters",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Alabama Point",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Alabama Point East",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Beach Pavilion",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Campground Road beach access",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Cotton Bayou",
+      "status": "Open, some facilities available",
+      "group": "open",
+      "detail": "Boardwalk replacement reported in annual report; storm attribution and service dates unresolved",
+      "damage": false,
+      "recovery": false,
+      "source": "https://www.outdooralabama.com/sites/default/files/pictures/2019-2020%20Annual%20Report.pdf"
+    },
+    {
+      "name": "Fishing pier",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "Pre-Sally durability retrofit; direct damage; dated partial and full reopening; $13.6M reported project total",
+      "damage": true,
+      "recovery": true,
+      "source": "https://outdooralabama.com/articles/gulf-state-park-pier-reopens-public"
+    },
+    {
+      "name": "Romar Beach",
+      "status": "Open via alternative path",
+      "group": "limited",
+      "detail": "Boardwalk closure; later $700k expansion included new facilities, excluded from Sally recovery economics",
+      "damage": false,
+      "recovery": false,
+      "source": "https://www.outdooralabama.com/articles/gulf-state-park-unveils-new-cabins-lake-shelby"
+    },
+    {
+      "name": "Campground",
+      "status": "Limited",
+      "group": "limited",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Bathhouses",
+      "status": "Limited",
+      "group": "limited",
+      "detail": "Bulletin attributes selected closures to renovations",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Campground office",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Activities building",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Camp store",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Laundry",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Nature Center",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Campground pool",
+      "status": "Open",
+      "group": "open",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Tennis courts",
+      "status": "Limited",
+      "group": "limited",
+      "detail": "Unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Lake Shelby picnic area",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "Bulletin attributes closure to enhancements",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Dog park",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "Bulletin attributes closure to renovations",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Boat launch",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "Bulletin explicitly attributes destruction to Sally; exact recovery and cost unknown",
+      "damage": true,
+      "recovery": false
+    },
+    {
+      "name": "Lodge",
+      "status": "Open",
+      "group": "open",
+      "detail": "2018 designation; project engineer reports storm damage and continued operations; no site-level paid costs",
+      "damage": true,
+      "recovery": false,
+      "source": "https://volkert.com/fortified-commercial-buildings-resilient-through-hurricane-sally/"
+    },
+    {
+      "name": "Eagle Cottages",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "Closure cause unknown",
+      "damage": false,
+      "recovery": false
+    },
+    {
+      "name": "Lakeside cabins",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "State confirms Sally damage to 17 structures; $8.8M project delivered 20; agency ribbon-cutting April 15, 2024, with separate earlier service announcement",
+      "damage": true,
+      "recovery": true,
+      "source": "https://www.outdooralabama.com/articles/gulf-state-park-unveils-new-cabins-lake-shelby"
+    },
+    {
+      "name": "Interpretive Center",
+      "status": "Closed",
+      "group": "closed",
+      "detail": "2018 designation; IBHS presenter reports favorable structural performance; closure cause and service interval unknown",
+      "damage": false,
+      "recovery": false,
+      "source": "https://upload.wikimedia.org/wikipedia/commons/7/7e/USACE_Institute_for_Water_Resources%2C_November_Silver_Jackets_webinar_-_USACE-p16021coll2-6751.pdf"
+    }
+  ]
+}

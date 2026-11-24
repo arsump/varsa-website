@@ -10,7 +10,7 @@ const esc=v=>String(v??'Unknown').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const $=id=>document.getElementById(id);
 const routes=['home','acquire','protect','operate','learn','research'];
 const data=async n=>{const r=await fetch('data/'+n+'.json');if(!r.ok)throw Error(n);return r.json()};
-const [sites,rules,wildfire,weather,nri,footprints,coreEvidence,pierRecovery]=await Promise.all(['sites','rules','wildfire','multihazard','nri','hail-footprints','core-evidence','pier-recovery'].map(data)).catch(error=>{
+const [sites,rules,wildfire,weather,nri,footprints,coreEvidence,pierRecovery,sallyPortfolio]=await Promise.all(['sites','rules','wildfire','multihazard','nri','hail-footprints','core-evidence','pier-recovery','sally-portfolio'].map(data)).catch(error=>{
  $('home-map').textContent='Property explorer data is temporarily unavailable. Reload to retry.';
  $('home-map').setAttribute('role','status');
  throw error;
@@ -244,6 +244,26 @@ $('print-record').addEventListener('click',async()=>{
  }catch{$('lookup-status').textContent='The PDF could not be generated. Try again.'}
  finally{button.disabled=false;button.textContent='Download PDF'}
 });
+const facilityRows=sallyPortfolio.facilities;
+const filters=[['all','All facilities'],['closed','Closed'],['limited','Limited access'],['damage','Documented storm damage'],['recovery','Dated recovery']];
+$('sally-portfolio').innerHTML=card('Hurricane Sally · Gulf State Park portfolio',
+ '<p>Alabama public-asset example · Service status on '+esc(sallyPortfolio.snapshot)+' · '+sourceLink(sallyPortfolio.bulletin,'Park status bulletin')+'</p>'+
+ '<p><strong>'+facilityRows.length+' facilities</strong> · '+facilityRows.filter(row=>row.group==='closed').length+' closed · '+
+ facilityRows.filter(row=>row.group==='limited').length+' limited · '+facilityRows.filter(row=>row.damage).length+' with documented Sally damage</p>'+
+ '<label>Show <select id="sally-filter">'+filters.map(([value,label])=>'<option value="'+value+'">'+label+'</option>').join('')+'</select></label>'+
+ '<p id="sally-count" role="status"></p><div class="table-scroll"><table class="data-table"><thead><tr><th>Facility</th><th>November status</th><th>Recovery evidence</th></tr></thead><tbody id="sally-facilities"></tbody></table></div>'+
+ '<p class="scope">A closure may reflect routine work or an unknown cause. Project totals describe the stated scope. Verified storm-only payments are unknown for this portfolio.</p>');
+function renderSallyFacilities(){
+ const filter=$('sally-filter').value;
+ const shown=facilityRows.filter(row=>filter==='all'||row.group===filter||
+  (filter==='damage'&&row.damage)||(filter==='recovery'&&row.recovery));
+ $('sally-count').textContent=shown.length+' of '+facilityRows.length+' facilities';
+ $('sally-facilities').innerHTML=shown.map(row=>'<tr><th scope="row">'+esc(row.name)+'</th><td>'+esc(row.status)+'</td><td>'+
+  esc(row.detail)+(row.source?' · '+sourceLink(row.source,'Evidence'):'')+
+  (row.name==='Fishing pier'?' · <a href="#research">Recovery record →</a>':'')+'</td></tr>').join('');
+}
+$('sally-filter').addEventListener('change',renderSallyFacilities);
+renderSallyFacilities();
 const money = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2,minimumFractionDigits:0});
 $('pier-recovery').innerHTML=card('Gulf State Park Pier · Recovery record',
  '<p class="scope">Alabama research example · '+sourceLink(pierRecovery.address_source,pierRecovery.address)+'</p>'+
