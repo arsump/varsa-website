@@ -1,0 +1,62 @@
+{
+  "reviewed_on": "2026-11-24",
+  "site_id": "FC-CITYHALL",
+  "parcel_id": "9711127901",
+  "findings": [
+    {
+      "id": "fc-cityhall-1978",
+      "kind": "building_fact",
+      "scope": "Named municipal building",
+      "date": "1978",
+      "summary": "Fort Collins identifies the municipal City Hall building as completed in 1978.",
+      "limit": "This date applies to the named building. Roof assembly, later improvements and the construction dates of other structures are unknown.",
+      "publisher": "City of Fort Collins Historic Preservation",
+      "source_url": "https://www.fortcollins.gov/Services/Historic-Preservation/Full-Story-Fort-Collins-Stories-from-Our-Past/William-B.-Robb-Fort-Collins%E2%80%99-Modern-Architect",
+      "reuse": "Attributed factual summary. Source text and photographs excluded."
+    },
+    {
+      "id": "fc-ma260017",
+      "kind": "approval",
+      "scope": "Address and parcel matched",
+      "date": "2026-03-30",
+      "summary": "The city approved exterior light fixture replacement under project MA260017 on March 30, 2026.",
+      "limit": "Approval establishes an administrative action. Completion and any resilience effect are unknown.",
+      "publisher": "City of Fort Collins Development Review",
+      "source_url": "https://www.fortcollins.gov/Business/Building-and-Development/Development-Review/Development-Proposals",
+      "reuse": "Attributed factual summary. Bulk reuse rights remain unverified."
+    },
+    {
+      "id": "fc-codes-2026",
+      "kind": "jurisdiction_rule",
+      "scope": "Fort Collins permit applications",
+      "date": "2026-04-01",
+      "summary": "Fort Collins applies the 2024 International Codes with local amendments to permit applications submitted on or after April 1, 2026.",
+      "limit": "Requirements depend on the work and application date. Code edition at original construction and present building compliance are unknown.",
+      "publisher": "City of Fort Collins Building Services",
+      "source_url": "https://www.fortcollins.gov/Government/City-Code-and-Charter/Building-Code",
+      "reuse": "Attributed factual summary. Code and standards text excluded."
+    },
+    {
+      "id": "ibhs-hail-shingle-tests",
+      "kind": "controlled_test",
+      "scope": "Laboratory tests on new asphalt shingles",
+      "date": null,
+      "summary": "IBHS found that tested asphalt shingles varied in performance against 2-inch laboratory hail, including within impact-rated products.",
+      "limit": "The study applies to the tested products and conditions. This building's roof material, age, product and exposure are unknown, so a site-specific performance estimate is unavailable.",
+      "publisher": "Insurance Institute for Business & Home Safety",
+      "source_url": "https://ibhs.org/wp-content/uploads/member_docs/ibhs-hail-impact-at-a-glance.pdf",
+      "reuse": "Attributed research summary. Report and figures excluded."
+    },
+    {
+      "id": "ibhs-shingle-cost-context",
+      "kind": "market_comparison",
+      "scope": "Roofing material cost sample in seven US markets",
+      "date": null,
+      "summary": "The same IBHS study found that better-performing shingles averaged 9% more per unit of material than non-impact-rated shingles in its sample, with meaningful variation by market.",
+      "limit": "Historical material prices only. Local installed cost, premium, retrofit cost and loss at this property are unknown.",
+      "publisher": "Insurance Institute for Business & Home Safety",
+      "source_url": "https://ibhs.org/wp-content/uploads/member_docs/ibhs-hail-impact-at-a-glance.pdf",
+      "reuse": "Attributed research summary. Report and figures excluded."
+    }
+  ]
+}

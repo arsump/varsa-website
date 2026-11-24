@@ -1,0 +1,24 @@
+{
+  "place": "Fort Collins, Colorado",
+  "geoid": "0827425",
+  "boundary_vintage": "2023",
+  "evidence_kind": "modeled community relative ranking",
+  "burn_probability_national_rank": "85.80%",
+  "risk_to_homes_national_rank": "85.60%",
+  "hazard_potential_national_rank": "76.20%",
+  "source_url": "https://services1.arcgis.com/gGHDlz6USftL5Pau/arcgis/rest/services/place_boundaries_conus_ak_hi/FeatureServer/0/query?where=NAME+%3D+%27Fort+Collins%27+AND+STUSPS+%3D+%27CO%27&outFields=GEOID%2CNAME%2CSTUSPS%2Cvintage%2CBP_STATE_R%2CBP_NATIONA%2CRISK_STATE%2CRISK_NATIO%2CWHP_STATE_%2CWHP_NATION&returnGeometry=false&f=json",
+  "source_item": "https://www.arcgis.com/home/item.html?id=40aad45f98cd41579ba6c8b7963789c2",
+  "license": "CC0 per USFS item license",
+  "source_version": "2024 Wildfire Risk to Communities; 2023 Census geography",
+  "retrieved_at": "2026-11-24T19:24:48.308751+00:00",
+  "sha256": "6b470e7ec0d3802944496692cc5a5e6b938038c9feeb130d576d08b819ba702b",
+  "bytes": 1908,
+  "metadata_sha256": "4f6f3221d872df33c45c2e093fd5860fc646d7f462100521a7eeabf76bc46339",
+  "metadata_bytes": 15116,
+  "property_impact": "unknown",
+  "limitations": [
+    "Community rank only",
+    "Rank is relative and is not annual probability or property-specific risk",
+    "Actual parcel-level wildfire exposure remains unknown"
+  ]
+}

@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Core Property Record",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_type",
+    "property",
+    "core_record",
+    "unknowns"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "0.1.0",
+        "0.2.0"
+      ]
+    },
+    "record_type": {
+      "const": "property_intelligence_record"
+    },
+    "property": {
+      "type": "object",
+      "required": [
+        "id",
+        "address",
+        "source_url",
+        "county_fips",
+        "evidence_kind",
+        "precision",
+        "checked_at"
+      ]
+    },
+    "core_record": {
+      "type": "object",
+      "required": [
+        "events",
+        "requirements",
+        "hazard_exposure",
+        "protection_features",
+        "performance_observations",
+        "financial_observations"
+      ],
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "county_fips",
+              "provenance",
+              "property_impact",
+              "relationship"
+            ],
+            "properties": {
+              "property_impact": {
+                "const": "unknown"
+              },
+              "provenance": {
+                "type": "object",
+                "required": [
+                  "source_id",
+                  "source_url",
+                  "source_record_id",
+                  "ingested_at",
+                  "evidence_kind",
+                  "spatial_precision",
+                  "limitations"
+                ]
+              }
+            }
+          }
+        },
+        "regional_events": {
+          "type": "array"
+        },
+        "flood_map_checks": {
+          "type": "array"
+        },
+        "requirements": {
+          "type": "array"
+        },
+        "hazard_exposure": {
+          "type": "array"
+        },
+        "protection_features": {
+          "type": "array"
+        },
+        "performance_observations": {
+          "type": "array"
+        },
+        "financial_observations": {
+          "type": "array"
+        },
+        "resilience": {
+          "$ref": "#/$defs/resilience"
+        }
+      },
+      "additionalProperties": false
+    },
+    "unknowns": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "resilience": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "findings",
+        "layers",
+        "relationships",
+        "application_limits"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "findings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "id",
+              "kind",
+              "scope",
+              "summary",
+              "limit",
+              "publisher",
+              "source_url",
+              "reuse",
+              "reviewed_on",
+              "date"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string"
+              },
+              "scope": {
+                "type": "string"
+              },
+              "summary": {
+                "type": "string"
+              },
+              "limit": {
+                "type": "string"
+              },
+              "publisher": {
+                "type": "string"
+              },
+              "source_url": {
+                "type": "string"
+              },
+              "reuse": {
+                "type": "string"
+              },
+              "reviewed_on": {
+                "type": "string"
+              },
+              "date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "layers": {
+          "type": "object",
+          "required": [
+            "hazards",
+            "protection",
+            "performance",
+            "economics"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "hazards": {
+              "type": "object",
+              "required": [
+                "finding_ids",
+                "unknown"
+              ],
+              "properties": {
+                "finding_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "unknown": {
+                  "type": "string"
+                }
+              }
+            },
+            "protection": {
+              "type": "object",
+              "required": [
+                "finding_ids",
+                "unknown"
+              ],
+              "properties": {
+                "finding_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "unknown": {
+                  "type": "string"
+                }
+              }
+            },
+            "performance": {
+              "type": "object",
+              "required": [
+                "finding_ids",
+                "unknown"
+              ],
+              "properties": {
+                "finding_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "unknown": {
+                  "type": "string"
+                }
+              }
+            },
+            "economics": {
+              "type": "object",
+              "required": [
+                "finding_ids",
+                "unknown"
+              ],
+              "properties": {
+                "finding_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "unknown": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "type"
+            ],
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "application_limits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "0.2.0"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "core_record": {
+            "required": [
+              "resilience"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

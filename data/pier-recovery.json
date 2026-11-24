@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "name": "Gulf State Park Pier",
+  "address": "20800 East Beach Blvd, Gulf Shores, AL 36542",
+  "address_source": "https://www.alapark.com/parks/gulf-state-park/beaches",
+  "event": "Hurricane Sally",
+  "event_date": "2020-09-16",
+  "milestones": [
+    {
+      "date": "2020-09",
+      "title": "Decking and railings upgraded",
+      "detail": "Hardwood decking and railings were installed before landfall for durability. Their effect on storm damage is unknown.",
+      "source": "https://pub-data.diver.orr.noaa.gov/restoration/Gulf_State_Park_Pier_Renovation_ID239_2022_Annual_Report.pdf"
+    },
+    {
+      "date": "2020-09-16",
+      "title": "Sally damages the pier",
+      "detail": "The state reports that the storm destroyed a 200-foot section and caused other damage.",
+      "source": "https://outdooralabama.com/articles/gulf-state-park-pier-reopens-public"
+    },
+    {
+      "date": "2021-01-30",
+      "title": "Partial reopening",
+      "detail": "Approximately 725 feet reopened. The more heavily damaged southern portion remained closed.",
+      "source": "https://www.alapark.com/sites/default/files/2021-01/Press%20Release_Gulf%20State%20Park%20Pier%20Reopening.V2.pdf"
+    },
+    {
+      "date": "2024-08-19",
+      "title": "Rebuilt pier reopens",
+      "detail": "The renovated pier returned to service after a separate construction closure that began in November 2023.",
+      "source": "https://outdooralabama.com/articles/gulf-state-park-pier-reopens-public"
+    }
+  ],
+  "economics": [
+    {
+      "label": "State-reported project total",
+      "amount_usd": 13600000,
+      "detail": "Rounded total for the completed repair and enhancement project.",
+      "source": "https://www.outdooralabama.com/articles/rebuilt-gulf-state-park-pier-officially-reopened"
+    },
+    {
+      "label": "Federal funding obligated",
+      "amount_usd": 13629365.27,
+      "detail": "OpenFEMA disaster 4563, worksheet 510. This amount describes a federal funding commitment.",
+      "source": "https://www.fema.gov/api/open/v2/PublicAssistanceFundedProjectsDetails?$filter=disasterNumber%20eq%204563%20and%20pwNumber%20eq%20510"
+    },
+    {
+      "label": "Verified storm-only payments",
+      "amount_usd": null,
+      "detail": "The final paid total attributable specifically to storm damage remains unknown."
+    }
+  ]
+}

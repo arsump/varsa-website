@@ -1,0 +1,171 @@
+{
+  "source_url": "https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0/query?where=STCOFIPS+IN+%28%2708069%27%2C%2708123%27%29&outFields=STCOFIPS%2CSTATE%2CCOUNTY%2CNRI_VER%2CAVLN_RISKR%2CCFLD_RISKR%2CCWAV_RISKR%2CDRGT_RISKR%2CERQK_RISKR%2CHAIL_RISKR%2CHWAV_RISKR%2CHRCN_RISKR%2CISTM_RISKR%2CLNDS_RISKR%2CLTNG_RISKR%2CIFLD_RISKR%2CSWND_RISKR%2CTRND_RISKR%2CTSUN_RISKR%2CVLCN_RISKR%2CWFIR_RISKR%2CWNTW_RISKR&returnGeometry=false&f=json",
+  "source_item": "https://www.arcgis.com/home/item.html?id=39485e8035d446a5bff03259508ae355",
+  "retrieved_at": "2026-11-24T19:32:56.292235+00:00",
+  "bytes": 5313,
+  "sha256": "d617a814897adb4822ced05556ec8e8ff62f36aee090eb47aa7c91ca0b112647",
+  "evidence_kind": "FEMA county-level relative risk index rating",
+  "limitations": [
+    "Planning context only",
+    "County ratings do not determine property risk, damage or insurance eligibility"
+  ],
+  "attribution": "This product uses the Federal Emergency Management Agency\u2019s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency\u2019s website(s).",
+  "counties": {
+    "08069": {
+      "county": "Larimer",
+      "version": "December 2025",
+      "hazards": [
+        {
+          "family": "Avalanche",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Coastal flooding",
+          "rating": "Not Applicable"
+        },
+        {
+          "family": "Cold wave",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Drought",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Earthquake",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Hail",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Heat wave",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Hurricane",
+          "rating": "Not Applicable"
+        },
+        {
+          "family": "Ice storm",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Landslide",
+          "rating": "Relatively Moderate"
+        },
+        {
+          "family": "Lightning",
+          "rating": "Very High"
+        },
+        {
+          "family": "Inland flooding",
+          "rating": "Relatively Moderate"
+        },
+        {
+          "family": "Strong wind",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Tornado",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Tsunami",
+          "rating": "Not Applicable"
+        },
+        {
+          "family": "Volcanic activity",
+          "rating": "Very Low"
+        },
+        {
+          "family": "Wildfire",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Winter weather",
+          "rating": "Very High"
+        }
+      ]
+    },
+    "08123": {
+      "county": "Weld",
+      "version": "December 2025",
+      "hazards": [
+        {
+          "family": "Avalanche",
+          "rating": "Not Applicable"
+        },
+        {
+          "family": "Coastal flooding",
+          "rating": "Not Applicable"
+        },
+        {
+          "family": "Cold wave",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Drought",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Earthquake",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Hail",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Heat wave",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Hurricane",
+          "rating": "Not Applicable"
+        },
+        {
+          "family": "Ice storm",
+          "rating": "Relatively Moderate"
+        },
+        {
+          "family": "Landslide",
+          "rating": "Very Low"
+        },
+        {
+          "family": "Lightning",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Inland flooding",
+          "rating": "Relatively Moderate"
+        },
+        {
+          "family": "Strong wind",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Tornado",
+          "rating": "Relatively High"
+        },
+        {
+          "family": "Tsunami",
+          "rating": "Not Applicable"
+        },
+        {
+          "family": "Volcanic activity",
+          "rating": "Very Low"
+        },
+        {
+          "family": "Wildfire",
+          "rating": "Relatively Low"
+        },
+        {
+          "family": "Winter weather",
+          "rating": "Relatively High"
+        }
+      ]
+    }
+  }
+}
