@@ -1,0 +1,13 @@
+{
+  "retrieved": "2026-11-24",
+  "sample_parcels": 25,
+  "parcels_with_commercial_permits": 13,
+  "matched_permits": 27,
+  "permits_with_final_date": 19,
+  "parcels_with_dated_final": 9,
+  "matched_permit_classes": [
+    "Alteration/Tenant Finish",
+    "New Building",
+    "Repair/Replace"
+  ]
+}
