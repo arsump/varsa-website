@@ -1,0 +1,167 @@
+[
+  {
+    "name": "storm-2024.csv.gz",
+    "url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+    "retrieved_at": "2026-11-24T18:57:13.516547+00:00",
+    "http_status": 200,
+    "bytes": 15978220,
+    "sha256": "c8cd847ae2e0feaf6966b531e2d221cc0649f76393953ca3ba2d1443ff7a1cfb",
+    "content_type": "application/gzip",
+    "status": "downloaded",
+    "final_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz"
+  },
+  {
+    "name": "footprint-2024-07-20.geojson",
+    "url": "https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/hail/mrms_hail_data_2024-07-20.geojson",
+    "retrieved_at": "2026-11-24T18:57:13.517332+00:00",
+    "http_status": 200,
+    "bytes": 2159331,
+    "sha256": "bb1e85c2a0a6955470488bfda0747c58eb130f7e4ac502dcb37e01618bf45aba",
+    "content_type": "application/octet-stream",
+    "status": "downloaded",
+    "final_url": "https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/hail/mrms_hail_data_2024-07-20.geojson",
+    "feature_count": 4173
+  },
+  {
+    "name": "footprint-readme.md",
+    "url": "https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/EFC_Dataset_README.md",
+    "retrieved_at": "2026-11-24T18:57:13.518045+00:00",
+    "http_status": 200,
+    "bytes": 9639,
+    "sha256": "cc1295b0b7c18a5e1b550e55886057d923179b0322cfa7065c11734103e713bf",
+    "content_type": "text/markdown",
+    "status": "downloaded",
+    "final_url": "https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/EFC_Dataset_README.md"
+  },
+  {
+    "name": "mrms-20261124.grib2.gz",
+    "url": "https://mrms.ncep.noaa.gov/data/2D/MESH/MRMS_MESH_00.50_20261124-185438.grib2.gz",
+    "retrieved_at": "2026-11-24T18:57:13.518777+00:00",
+    "http_status": 200,
+    "bytes": 34176,
+    "sha256": "70dc9483ba8fa897cc550dafafffd5e91243cf02ee16021d1794026b757321a5",
+    "content_type": "application/x-gzip",
+    "status": "downloaded",
+    "final_url": "https://mrms.ncep.noaa.gov/2D/MESH/MRMS_MESH_00.50_20261124-185438.grib2.gz"
+  },
+  {
+    "name": "mrms-doc.html",
+    "url": "https://vlab.noaa.gov/web/mrms",
+    "retrieved_at": "2026-11-24T18:57:13.520230+00:00",
+    "status": "failed",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "name": "state-address-terms.json",
+    "url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Addresses/FeatureServer?f=pjson",
+    "retrieved_at": "2026-11-24T18:57:13.521091+00:00",
+    "http_status": 200,
+    "bytes": 5962,
+    "sha256": "4c67ce0eeac325140b6e42a9a8cc63782d8e87a7e9fa3adb1d39df2f39abb1d7",
+    "content_type": "text/plain; charset=UTF-8",
+    "status": "downloaded",
+    "final_url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Addresses/FeatureServer?f=pjson"
+  },
+  {
+    "name": "state-parcel-terms.json",
+    "url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Parcels/MapServer?f=pjson",
+    "retrieved_at": "2026-11-24T18:57:17.142943+00:00",
+    "http_status": 200,
+    "bytes": 4616,
+    "sha256": "d3a6669a272bc2c88e36dc74fb7616b37c480ec18d1999cf31aeed5dab7d9595",
+    "content_type": "text/plain; charset=UTF-8",
+    "status": "downloaded",
+    "final_url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Parcels/MapServer?f=pjson"
+  },
+  {
+    "name": "state-address-query.json",
+    "url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Addresses/MapServer/0/query?where=AddrFull+LIKE+%27300%25Laporte%25%27+OR+AddrFull+LIKE+%27300%25LAPORTE%25%27&outFields=OBJECTID%2CAddrFull%2CPlaceName%2CZipcode%2CCounty%2CParcelID%2CMOD_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+    "retrieved_at": "2026-11-24T18:57:17.143982+00:00",
+    "http_status": 200,
+    "bytes": 1309,
+    "sha256": "ed5a2acd5e056a0441bdf9105d6912a847bc5c7c04f0a5735dc72d079bf95b84",
+    "content_type": "application/json; charset=UTF-8",
+    "status": "downloaded",
+    "final_url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Addresses/MapServer/0/query?where=AddrFull+LIKE+%27300%25Laporte%25%27+OR+AddrFull+LIKE+%27300%25LAPORTE%25%27&outFields=OBJECTID%2CAddrFull%2CPlaceName%2CZipcode%2CCounty%2CParcelID%2CMOD_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+    "feature_count": 2
+  },
+  {
+    "name": "fc-address-query.json",
+    "url": "https://services1.arcgis.com/dLpFH5mwVvxSN4OE/arcgis/rest/services/Addresses/FeatureServer/0/query?where=NUMBER_+%3D+300+AND+STRNAME+LIKE+%27%25LAPORTE%25%27&outFields=OBJECTID%2CADDRESS%2CFULL_ADDRESS%2CCITY%2CSTATE%2CZIP%2CLAST_EDITED_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+    "retrieved_at": "2026-11-24T18:57:17.217637+00:00",
+    "http_status": 200,
+    "bytes": 1886,
+    "sha256": "525b6c3fd0cf884ab5af07c2fdfeeceb1dbca4c904d794bdb96bce8a435aafb4",
+    "content_type": "application/json; charset=utf-8",
+    "status": "downloaded",
+    "final_url": "https://services1.arcgis.com/dLpFH5mwVvxSN4OE/arcgis/rest/services/Addresses/FeatureServer/0/query?where=NUMBER_+%3D+300+AND+STRNAME+LIKE+%27%25LAPORTE%25%27&outFields=OBJECTID%2CADDRESS%2CFULL_ADDRESS%2CCITY%2CSTATE%2CZIP%2CLAST_EDITED_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+    "feature_count": 3
+  },
+  {
+    "name": "fc-address-meta.json",
+    "url": "https://services1.arcgis.com/dLpFH5mwVvxSN4OE/arcgis/rest/services/Addresses/FeatureServer/0?f=pjson",
+    "retrieved_at": "2026-11-24T18:57:18.585078+00:00",
+    "http_status": 200,
+    "bytes": 19114,
+    "sha256": "c9df9acaa9fd5d5a48f8f68e5252b02686b58ce742a4cbdd3b7f522c2120b667",
+    "content_type": "application/json; charset=utf-8",
+    "status": "downloaded",
+    "final_url": "https://services1.arcgis.com/dLpFH5mwVvxSN4OE/arcgis/rest/services/Addresses/FeatureServer/0?f=pjson"
+  },
+  {
+    "name": "fc-code.html",
+    "url": "https://www.fortcollins.gov/Government/City-Code-and-Charter/Building-Code",
+    "retrieved_at": "2026-11-24T18:57:19.046649+00:00",
+    "http_status": 200,
+    "bytes": 129770,
+    "sha256": "8e97e2ad45b25f9e5d9e9765994eb3c7dd6bad63ade10285625e7a05faa90c75",
+    "content_type": "text/html; charset=utf-8",
+    "status": "downloaded",
+    "final_url": "https://www.fortcollins.gov/Government/City-Code-and-Charter/Building-Code"
+  },
+  {
+    "name": "fc-roof.html",
+    "url": "https://www.fortcollins.gov/Business/Permits-and-Licensing/Building-Permits",
+    "retrieved_at": "2026-11-24T18:57:19.051898+00:00",
+    "http_status": 200,
+    "bytes": 319519,
+    "sha256": "2b6f0a7c081bd2306e331c78f67a055cbbb5d81d118708f45d45b75ba17b8a26",
+    "content_type": "text/html; charset=utf-8",
+    "status": "downloaded",
+    "final_url": "https://www.fortcollins.gov/Business/Permits-and-Licensing/Building-Permits"
+  },
+  {
+    "name": "csfs-viewer.html",
+    "url": "https://tra-co-pub.coloradoforestatlas.org/",
+    "retrieved_at": "2026-11-24T18:57:20.470837+00:00",
+    "http_status": 200,
+    "bytes": 1973,
+    "sha256": "ea8b6ef7dd4b614e8159770594852d4054dfa2eebe2a9b238b98b04721c72f4d",
+    "content_type": "text/html; charset=UTF-8",
+    "status": "downloaded",
+    "final_url": "https://tra-co-pub.coloradoforestatlas.org/"
+  },
+  {
+    "name": "csfs-wui-meta.json",
+    "url": "https://tiles.arcgis.com/tiles/KNdRU5cN6ENqCTjk/arcgis/rest/services/WUI_Risk_WTL1/MapServer?f=pjson",
+    "retrieved_at": "2026-11-24T18:57:21.071992+00:00",
+    "http_status": 200,
+    "bytes": 5440,
+    "sha256": "7773953ccf94b73e29e62fdbf7c1ec61639c55a2d8a4b29affb8ad8127d7f2c5",
+    "content_type": "application/json;charset=utf-8",
+    "status": "downloaded",
+    "final_url": "https://tiles.arcgis.com/tiles/KNdRU5cN6ENqCTjk/arcgis/rest/services/WUI_Risk_WTL1/MapServer?f=pjson"
+  },
+  {
+    "name": "state-parcel-query.geojson",
+    "url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Parcels/MapServer/0/query?geometry=%7B%22x%22%3A+-105.08157321899995%2C+%22y%22%3A+40.58987705000004%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CcountyName%2CcountyFips%2Cparcel_id%2CsitusAdd%2CsitAddCty%2CsitAddZip%2ClandUseDsc%2CdateReceived&returnGeometry=true&outSR=4326&f=geojson",
+    "retrieved_at": "2026-11-24T18:58:02.274309+00:00",
+    "http_status": 200,
+    "bytes": 551,
+    "sha256": "078253f1e37b9c491219e4d25623ee315b43fd00e7d906bdf12f9dc74b5ec7af",
+    "content_type": "application/geo+json; charset=UTF-8",
+    "status": "downloaded",
+    "final_url": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Parcels/MapServer/0/query?geometry=%7B%22x%22%3A+-105.08157321899995%2C+%22y%22%3A+40.58987705000004%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CcountyName%2CcountyFips%2Cparcel_id%2CsitusAdd%2CsitAddCty%2CsitAddZip%2ClandUseDsc%2CdateReceived&returnGeometry=true&outSR=4326&f=geojson",
+    "feature_count": 1
+  }
+]

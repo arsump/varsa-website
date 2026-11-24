@@ -1,0 +1,536 @@
+{
+  "schema_version": "0.1.0",
+  "record_type": "property_intelligence_record",
+  "property": {
+    "id": "FC-CITYHALL",
+    "name": "Fort Collins City Hall",
+    "address": "300 Laporte Ave, Fort Collins, CO 80521",
+    "aliases": [
+      "300 laporte ave",
+      "300 laporte avenue",
+      "fort collins city hall"
+    ],
+    "county_fips": "08069",
+    "jurisdiction": "Fort Collins, Colorado",
+    "source_url": "https://www.fortcollins.gov/Government/Contact-Us",
+    "checked_at": "2026-11-24",
+    "coordinates": {
+      "longitude": -105.08157321899995,
+      "latitude": 40.58987705000004
+    },
+    "parcel_id": "9711127901",
+    "building_features": null,
+    "evidence_kind": "reported",
+    "precision": "state-published address point; independently cross-checked with city GIS; parcel intersection; positional accuracy unknown",
+    "location_provenance": {
+      "state_address_id": 2231386,
+      "state_address_source": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Addresses/MapServer/0/query?where=AddrFull+LIKE+%27300%25Laporte%25%27+OR+AddrFull+LIKE+%27300%25LAPORTE%25%27&outFields=OBJECTID%2CAddrFull%2CPlaceName%2CZipcode%2CCounty%2CParcelID%2CMOD_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+      "city_address_id": 62860,
+      "city_address_source": "https://services1.arcgis.com/dLpFH5mwVvxSN4OE/arcgis/rest/services/Addresses/FeatureServer/0/query?where=NUMBER_+%3D+300+AND+STRNAME+LIKE+%27%25LAPORTE%25%27&outFields=OBJECTID%2CADDRESS%2CFULL_ADDRESS%2CCITY%2CSTATE%2CZIP%2CLAST_EDITED_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+      "address_point_difference_m": 27.3,
+      "parcel_id": "9711127901",
+      "parcel_source": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Parcels/MapServer/0/query?geometry=%7B%22x%22%3A+-105.08157321899995%2C+%22y%22%3A+40.58987705000004%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CcountyName%2CcountyFips%2Cparcel_id%2CsitusAdd%2CsitAddCty%2CsitAddZip%2ClandUseDsc%2CdateReceived&returnGeometry=true&outSR=4326&f=geojson",
+      "retrieved_at": "2026-11-24T18:58:02.274309+00:00",
+      "parcel_status": "reported parcel geometry match, survey accuracy unknown",
+      "attribution": "State of Colorado Public addresses and parcels were accessed on 2026-11-24 from https://gis.colorado.gov/public/rest/services/Address_and_Parcel"
+    },
+    "footprint_screening": {
+      "date": "2024-07-20",
+      "source_id": "NOAA-EFC",
+      "source_url": "https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/hail/mrms_hail_data_2024-07-20.geojson",
+      "source_sha256": "bb1e85c2a0a6955470488bfda0747c58eb130f7e4ac502dcb37e01618bf45aba",
+      "ingested_at": "2026-11-24T18:57:13.517332+00:00",
+      "evidence_kind": "modeled radar hail size",
+      "feature_count": 4173,
+      "address_point_intersections": [],
+      "interpretation": "No intersection with the downloaded daily modeled footprint polygons at the state address point; actual hail exposure remains unknown",
+      "property_impact": "unknown",
+      "limitations": [
+        "Point intersection only, not a parcel or building footprint analysis",
+        "Radar-derived hail estimates are not observed property impacts",
+        "Single dated file; coverage and model error not quantified"
+      ]
+    }
+  },
+  "core_record": {
+    "events": [
+      {
+        "id": "1186038",
+        "county_fips": "08069",
+        "event_type": "Thunderstorm Wind",
+        "observed_at_local": "20-JUL-24 18:40:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "CAMPION",
+        "point": [
+          40.3494,
+          -105.0281
+        ],
+        "magnitude": 52,
+        "unit": "knots",
+        "report_source": "Broadcast Media",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186038",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186039",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:40:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "CAMPION",
+        "point": [
+          40.3494,
+          -105.0281
+        ],
+        "magnitude": 1,
+        "unit": "inches",
+        "report_source": "Broadcast Media",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186039",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186168",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 17:53:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "FT COLLINS",
+        "point": [
+          40.57,
+          -105.05
+        ],
+        "magnitude": 1,
+        "unit": "inches",
+        "report_source": "CoCoRaHS",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186168",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186177",
+        "county_fips": "08069",
+        "event_type": "Thunderstorm Wind",
+        "observed_at_local": "20-JUL-24 18:48:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "BERTHOUD",
+        "point": [
+          40.28,
+          -105.16
+        ],
+        "magnitude": 50,
+        "unit": "knots",
+        "report_source": "Mesonet",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186177",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186178",
+        "county_fips": "08069",
+        "event_type": "Thunderstorm Wind",
+        "observed_at_local": "20-JUL-24 18:49:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "BERTHOUD",
+        "point": [
+          40.29,
+          -105.11
+        ],
+        "magnitude": 56,
+        "unit": "knots",
+        "report_source": "Mesonet",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186178",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186189",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:13:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "DRAKES",
+        "point": [
+          40.52,
+          -105.07
+        ],
+        "magnitude": 0.75,
+        "unit": "inches",
+        "report_source": "Public",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186189",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186190",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:34:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "LOVELAND",
+        "point": [
+          40.38,
+          -105.13
+        ],
+        "magnitude": 1,
+        "unit": "inches",
+        "report_source": "Public",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186190",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186192",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:40:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "LOVELAND",
+        "point": [
+          40.39,
+          -105.11
+        ],
+        "magnitude": 1,
+        "unit": "inches",
+        "report_source": "Trained Spotter",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186192",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186193",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:44:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "CAMPION",
+        "point": [
+          40.35,
+          -105.11
+        ],
+        "magnitude": 1.5,
+        "unit": "inches",
+        "report_source": "Public",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186193",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186194",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:45:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "BERTHOUD",
+        "point": [
+          40.28,
+          -105.16
+        ],
+        "magnitude": 1.25,
+        "unit": "inches",
+        "report_source": "CoCoRaHS",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186194",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186195",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:52:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "BERTHOUD",
+        "point": [
+          40.27,
+          -105.1
+        ],
+        "magnitude": 1,
+        "unit": "inches",
+        "report_source": "CoCoRaHS",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186195",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186198",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 18:57:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "BERTHOUD",
+        "point": [
+          40.31,
+          -105.1
+        ],
+        "magnitude": 0.75,
+        "unit": "inches",
+        "report_source": "Trained Spotter",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186198",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      },
+      {
+        "id": "1186199",
+        "county_fips": "08069",
+        "event_type": "Hail",
+        "observed_at_local": "20-JUL-24 19:00:00",
+        "timezone_reported": "MST-7",
+        "location_reported": "BERTHOUD",
+        "point": [
+          40.27,
+          -105.1
+        ],
+        "magnitude": 1,
+        "unit": "inches",
+        "report_source": "Trained Spotter",
+        "provenance": {
+          "source_id": "NOAA-SE",
+          "source_url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20261119.csv.gz",
+          "source_record_id": "1186199",
+          "published_at": null,
+          "archive_revision": "2026-11-19",
+          "ingested_at": "2026-11-24T18:58:37.016066+00:00",
+          "evidence_kind": "reported",
+          "spatial_precision": "reported point; accuracy unknown",
+          "license_status": "federal data; dataset-specific redistribution review pending",
+          "verification_status": "imported from official archive",
+          "limitations": [
+            "County context only",
+            "No verified property impact or severity footprint"
+          ]
+        },
+        "property_impact": "unknown",
+        "relationship": "same county; property impact unknown"
+      }
+    ],
+    "requirements": [
+      {
+        "id": "FC-2024-CODE",
+        "jurisdiction": "Fort Collins",
+        "text": "The city lists the 2024 International Codes and local amendments for permits submitted from April 1, 2026.",
+        "effective_date": "2026-04-01",
+        "source_url": "https://www.fortcollins.gov/Government/City-Code-and-Charter/Building-Code",
+        "checked_at": "2026-11-24",
+        "applicability": "unknown for this property"
+      },
+      {
+        "id": "FC-ROOF",
+        "jurisdiction": "Fort Collins",
+        "text": "City permit guidance specifies Class 4 impact-resistant asphalt shingles for the replaced portion when at least half of a roof is replaced.",
+        "effective_date": null,
+        "source_url": "https://www.fortcollins.gov/Business/Permits-and-Licensing/Building-Permits?lang_update=639217061117399231&mobile_pref=0",
+        "checked_at": "2026-11-24",
+        "applicability": "unknown; confirm roof type, scope and governing code with city"
+      }
+    ],
+    "hazard_exposure": [
+      {
+        "date": "2024-07-20",
+        "source_id": "NOAA-EFC",
+        "source_url": "https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/hail/mrms_hail_data_2024-07-20.geojson",
+        "source_sha256": "bb1e85c2a0a6955470488bfda0747c58eb130f7e4ac502dcb37e01618bf45aba",
+        "ingested_at": "2026-11-24T18:57:13.517332+00:00",
+        "evidence_kind": "modeled radar hail size",
+        "feature_count": 4173,
+        "address_point_intersections": [],
+        "interpretation": "No intersection with the downloaded daily modeled footprint polygons at the state address point; actual hail exposure remains unknown",
+        "property_impact": "unknown",
+        "limitations": [
+          "Point intersection only, not a parcel or building footprint analysis",
+          "Radar-derived hail estimates are not observed property impacts",
+          "Single dated file; coverage and model error not quantified"
+        ]
+      }
+    ],
+    "protection_features": [],
+    "performance_observations": [],
+    "financial_observations": []
+  },
+  "unknowns": [
+    "building characteristics",
+    "wildfire exposure",
+    "property damage",
+    "insurance and costs"
+  ]
+}

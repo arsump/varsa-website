@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 data/*.csv.gz
 docs/homepage.png
+audit/raw/
+audit/probe.json

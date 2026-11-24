@@ -20,3 +20,6 @@ Internal pilot; release permissions remain pending.
 - Manual spot check of downloaded archive: event 1186168, 20 July 2024 at 17:53 as reported, FT COLLINS, 1.00-inch hail at reported 40.57, -105.05. Events 1186038 and 1186039 share CAMPION coordinates and time but distinct wind and hail event types, so both retained. No assignment to City Hall damage.
 - Coverage gaps, bias, update cadence, uptime, exact spatial precision and comprehensive event completeness unquantified. NOAA archive may revise historic rows; pinned version reproducible while retained. No rate limits or uptime commitments verified.
 - Wildfire/WUI data retrieval and municipal amendment text verification remain future diligence.
+
+## Updated data checkpoint
+See [Government data checkpoint](DATA_CHECKPOINT_2026-11-24.md) for successful EFC, MRMS and Colorado GIS retrieval, current licensing decisions, and verified pilot parcel. This supersedes the initial untested-source rows above.

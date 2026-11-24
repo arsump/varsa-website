@@ -1,1 +1,53 @@
-[{"id":"FC-CITYHALL","name":"Fort Collins City Hall","address":"300 Laporte Ave, Fort Collins, CO 80521","aliases":["300 laporte ave","300 laporte avenue","fort collins city hall"],"county_fips":"08069","jurisdiction":"Fort Collins, Colorado","source_url":"https://www.fortcollins.gov/Government/Contact-Us","checked_at":"2026-11-24","coordinates":null,"parcel_id":null,"building_features":null,"evidence_kind":"reported","precision":"published street address; parcel and coordinates unverified"}]
+[
+  {
+    "id": "FC-CITYHALL",
+    "name": "Fort Collins City Hall",
+    "address": "300 Laporte Ave, Fort Collins, CO 80521",
+    "aliases": [
+      "300 laporte ave",
+      "300 laporte avenue",
+      "fort collins city hall"
+    ],
+    "county_fips": "08069",
+    "jurisdiction": "Fort Collins, Colorado",
+    "source_url": "https://www.fortcollins.gov/Government/Contact-Us",
+    "checked_at": "2026-11-24",
+    "coordinates": {
+      "longitude": -105.08157321899995,
+      "latitude": 40.58987705000004
+    },
+    "parcel_id": "9711127901",
+    "building_features": null,
+    "evidence_kind": "reported",
+    "precision": "state-published address point; independently cross-checked with city GIS; parcel intersection; positional accuracy unknown",
+    "location_provenance": {
+      "state_address_id": 2231386,
+      "state_address_source": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Addresses/MapServer/0/query?where=AddrFull+LIKE+%27300%25Laporte%25%27+OR+AddrFull+LIKE+%27300%25LAPORTE%25%27&outFields=OBJECTID%2CAddrFull%2CPlaceName%2CZipcode%2CCounty%2CParcelID%2CMOD_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+      "city_address_id": 62860,
+      "city_address_source": "https://services1.arcgis.com/dLpFH5mwVvxSN4OE/arcgis/rest/services/Addresses/FeatureServer/0/query?where=NUMBER_+%3D+300+AND+STRNAME+LIKE+%27%25LAPORTE%25%27&outFields=OBJECTID%2CADDRESS%2CFULL_ADDRESS%2CCITY%2CSTATE%2CZIP%2CLAST_EDITED_DATE&returnGeometry=true&outSR=4326&f=json&resultRecordCount=20",
+      "address_point_difference_m": 27.3,
+      "parcel_id": "9711127901",
+      "parcel_source": "https://gis.colorado.gov/public/rest/services/Address_and_Parcel/Colorado_Public_Parcels/MapServer/0/query?geometry=%7B%22x%22%3A+-105.08157321899995%2C+%22y%22%3A+40.58987705000004%7D&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CcountyName%2CcountyFips%2Cparcel_id%2CsitusAdd%2CsitAddCty%2CsitAddZip%2ClandUseDsc%2CdateReceived&returnGeometry=true&outSR=4326&f=geojson",
+      "retrieved_at": "2026-11-24T18:58:02.274309+00:00",
+      "parcel_status": "reported parcel geometry match, survey accuracy unknown",
+      "attribution": "State of Colorado Public addresses and parcels were accessed on 2026-11-24 from https://gis.colorado.gov/public/rest/services/Address_and_Parcel"
+    },
+    "footprint_screening": {
+      "date": "2024-07-20",
+      "source_id": "NOAA-EFC",
+      "source_url": "https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/hail/mrms_hail_data_2024-07-20.geojson",
+      "source_sha256": "bb1e85c2a0a6955470488bfda0747c58eb130f7e4ac502dcb37e01618bf45aba",
+      "ingested_at": "2026-11-24T18:57:13.517332+00:00",
+      "evidence_kind": "modeled radar hail size",
+      "feature_count": 4173,
+      "address_point_intersections": [],
+      "interpretation": "No intersection with the downloaded daily modeled footprint polygons at the state address point; actual hail exposure remains unknown",
+      "property_impact": "unknown",
+      "limitations": [
+        "Point intersection only, not a parcel or building footprint analysis",
+        "Radar-derived hail estimates are not observed property impacts",
+        "Single dated file; coverage and model error not quantified"
+      ]
+    }
+  }
+]

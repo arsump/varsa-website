@@ -9,3 +9,8 @@
 - Chromium smoke test was written but could not launch because the runtime denied its socket creation. Six route, lookup, fallback and viewport checks remain unverified.
 - Source URLs inspected via web retrieval; exhaustive link status automation, accessibility audit and independent validation still pending.
 - Repository and visual identity inspected; branded development candidate generated. Netlify preview and parcel-level lookup pending.
+
+## Second checkpoint
+- Nine automated unit tests passed (four JS, five Python).
+- Checksums, one exact state address and city address, a unique intersecting parcel polygon, 4,173 EFC feature dates and geometry types, GRIB2 framing and Property Record JSON Schema validated.
+- Prior preview live browser smoke passed all six routes and lookup/fallback; latest deployment smoke pending.

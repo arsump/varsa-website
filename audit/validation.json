@@ -1,0 +1,11 @@
+{
+  "address_state_id": 2231386,
+  "address_city_id": 62860,
+  "point_difference_m": 27.3,
+  "parcel_id": "9711127901",
+  "parcel_intersection": true,
+  "footprint_features": 4173,
+  "point_intersections": 0,
+  "mrms_grib2_bytes": 52098,
+  "mrms_decoded_values": false
+}

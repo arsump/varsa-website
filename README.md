@@ -25,3 +25,6 @@ Static portable frontend today. Next: read-only API with validated core records 
 3. Verify local amendments, wildfire map and jurisdiction applicability through authoritative sources.
 4. Expand address lookup to verified parcels and explicit spatial match quality; build ten independently reviewed sample records.
 5. Obtain outside-business/IP clearance and explicit production release approval before commercialization.
+
+## Government data checkpoint
+Run `python src/retrieve_pilot.py`, then `python src/ingest.py --archive audit/raw/storm-2024.csv.gz` and `python src/validate_pilot.py`, then `python src/build.py`. Download results are captured in audit/downloads.json. The operational MRMS file is rolling, so use the preserved raw snapshot for repeat validation if it expires. The archive of raw downloads is kept outside the public repository. See docs/DATA_CHECKPOINT_2026-11-24.md.
