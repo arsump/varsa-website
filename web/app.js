@@ -1,3 +1,4 @@
+import {matchesPierAddress,daysAfterEvent} from '../src/recovery.mjs';
 import {assembleResilience} from '../src/core-record.mjs';
 import {evidenceEntry,evidenceTypes,readHistory,writeHistory} from '../src/property-history.mjs';
 import {nearbyReports,floodFinding} from '../src/deal-evidence.mjs';
@@ -9,7 +10,7 @@ const esc=v=>String(v??'Unknown').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const $=id=>document.getElementById(id);
 const routes=['home','acquire','protect','operate','learn','research'];
 const data=async n=>{const r=await fetch('data/'+n+'.json');if(!r.ok)throw Error(n);return r.json()};
-const [sites,rules,wildfire,weather,nri,footprints,coreEvidence]=await Promise.all(['sites','rules','wildfire','multihazard','nri','hail-footprints','core-evidence'].map(data)).catch(error=>{
+const [sites,rules,wildfire,weather,nri,footprints,coreEvidence,pierRecovery]=await Promise.all(['sites','rules','wildfire','multihazard','nri','hail-footprints','core-evidence','pier-recovery'].map(data)).catch(error=>{
  $('home-map').textContent='Property explorer data is temporarily unavailable. Reload to retry.';
  $('home-map').setAttribute('role','status');
  throw error;
@@ -211,6 +212,11 @@ function renderPortfolio(){
 }
 const messages={invalid:'Enter a Fort Collins street address including a house number.',ambiguous:'Multiple exact address matches. Add unit or building details.',not_found:'No exact address found. Check spelling and street suffix.',no_point:'Address matched, but coordinates are unavailable.',outside_city:'Address is outside the Fort Collins municipal boundary.'};
 async function lookup(value){
+ if(matchesPierAddress(value)){
+  ++searchVersion;
+  location.hash='research';
+  return;
+ }
  const version=++searchVersion;$('query').value=value;
  $('lookup-status').innerHTML='<div class="notice">Checking official address, parcel and boundary services…</div>';
  try{
@@ -238,5 +244,20 @@ $('print-record').addEventListener('click',async()=>{
  }catch{$('lookup-status').textContent='The PDF could not be generated. Try again.'}
  finally{button.disabled=false;button.textContent='Download PDF'}
 });
+const money = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2,minimumFractionDigits:0});
+$('pier-recovery').innerHTML=card('Gulf State Park Pier · Recovery record',
+ '<p class="scope">Alabama research example · '+sourceLink(pierRecovery.address_source,pierRecovery.address)+'</p>'+
+ '<h3>'+esc(pierRecovery.event)+' · Service recovery</h3>'+
+ pierRecovery.milestones.map(item=>{
+  const elapsed=daysAfterEvent(pierRecovery.event_date,item.date);
+  return '<article class="field"><time>'+esc(item.date)+'</time><h3>'+esc(item.title)+'</h3><p>'+
+   (elapsed===null?'':esc(elapsed.toLocaleString('en-US'))+' days since landfall. ')+esc(item.detail)+'</p>'+
+   sourceLink(item.source,'View evidence')+'</article>';
+ }).join('')+
+ '<p class="scope">The final interval includes periods of partial operation.</p><h3>Recovery economics</h3>'+
+ pierRecovery.economics.map(item=>'<article class="field"><h3>'+esc(item.label)+'</h3><strong>'+
+  esc(item.amount_usd===null?'Unknown':money.format(item.amount_usd))+'</strong><p>'+esc(item.detail)+'</p>'+
+  (item.source?sourceLink(item.source,'View evidence'):'')+'</article>').join('')+
+ '<p class="scope">The project total and federal obligation describe overlapping finances and cannot be added.</p>');
 $('research-data').innerHTML=[['NOAA Storm Events',weather.events.length+' county and regional weather reports, 2020–2024.',weather.archives[0].source_url],['FEMA National Risk Index','18 hazard ratings across Larimer and Weld County. December 2025.',nri.source_item],['NOAA Event Footprint Catalog','Two UTC days of radar-derived hail polygons.',footprints.archives[0].source_url],['USFS Wildfire Risk to Communities','CC0 modeled community ranks, 2024 data.',wildfire.source_item],['Colorado address and parcels','Live state address and parcel queries with municipal boundary checks.','https://gis.colorado.gov/public/rest/services/Address_and_Parcel'],['Building evidence','City building and permit datasets identified; rights and applicability pending.','https://www.arcgis.com/home/item.html?id=7e577a14c83f4d83a6b58657c48027da']].map(([t,p,u])=>'<article class="panel"><span class="pill">Source linked</span><h3>'+esc(t)+'</h3><p>'+esc(p)+'</p>'+sourceLink(u,'Explore source ↗')+'</article>').join('');
 selectSite(sites[0]);route();
