@@ -1,5 +1,6 @@
+import {nearbyReports,floodFinding} from '../src/deal-evidence.mjs';
 import {screenFlood,floodLabel,cityFloodGuide} from '../src/flood.mjs';
-import {makeDueDiligencePdf,verificationSteps} from '../src/due-diligence.mjs';
+import {makeDueDiligencePdf} from '../src/due-diligence.mjs';
 import {matchSite,makeRecord} from '../src/record.mjs';
 import {resolveAddress} from '../src/lookup.mjs';
 const esc=v=>String(v??'Unknown').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -84,6 +85,7 @@ function selectSite(site){
   if(selected!==selection||floodRequest!==request)return;
   flood=results;record.core_record.flood_map_checks=results;
   if(activeTab==='overview'||activeTab==='hazards')renderTab(activeTab);
+  renderPortfolio();
  });
  const request=floodRequest;
  const base=makeRecord(site,countyEvents,rules,wildfire);
@@ -110,9 +112,14 @@ function renderTab(tab){
  const count=record.core_record.events.length,regional=record.core_record.regional_events.length;
  let html='';
  if(tab==='overview'){
-  html='<div class="grid">'+[['County reports',count,'2020–2024 · reported weather'],['Regional zone reports',regional,'Context only · multi-county zones'],['Hazard ratings',county?.hazards.length??'Unknown','FEMA county-scale planning index']].map(([a,b,c])=>'<div class="metric-card"><small>'+a+'</small><strong>'+b+'</strong><span class="scope">'+c+'</span></div>').join('')+'</div>';
-  html+=card('Property snapshot','<div class="grid two"><div><h3>Location</h3><p>'+esc(site.location_provenance.parcel_status)+'</p><p>'+esc(site.precision)+'</p></div><div><h3>Building evidence</h3><p>Building type, roof characteristics and protection features are currently unknown.</p></div></div><div class="notice">Reported events and county ratings provide area context. Actual building exposure, damage, insurance terms and outcomes remain unknown.</div>');
-  html+=floodCard()+card('What to verify','<ol class="verification">'+verificationSteps(flood).map(s=>'<li><strong>'+esc(s.label)+'</strong><p>'+esc(s.detail)+(s.url?' '+sourceLink(s.url,'Official guidance'):'')+'</p></li>').join('')+'</ol>');
+  const local=nearbyReports(record);
+  const closest=local[0];
+  const floodStatus=record.core_record.flood_map_checks?floodFinding(flood):'Checking published maps…';
+  const hailStatus=hail?hail.matched.length+' mapped intersections across two UTC dates':'Address-point screen unavailable';
+  const history=closest?'<p>Closest report: <strong>'+esc(closest.event.event_type)+'</strong> · '+esc(closest.event.observed_at_local)+' · '+closest.miles.toFixed(1)+' mi · '+sourceLink(closest.event.provenance.source_url,'NOAA record '+closest.event.id)+'</p>':'<p>No mapped reports found within five miles in the available archive.</p>';
+  html=card('Deal brief','<dl class="deal-findings"><div><dt>Parcel</dt><dd>'+esc(site.parcel_id||'No parcel match')+'</dd></div><div><dt>Flood maps</dt><dd>'+esc(floodStatus)+'</dd></div><div><dt>Modeled hail</dt><dd>'+esc(hailStatus)+'</dd></div><div><dt>Weather history</dt><dd>'+local.length+' reported locations within 5 mi</dd></div></dl>'+history+'<p class="scope">NOAA county event points, 2020–2024. Distance is measured to the reported event point, which may be approximate. The two-date hail screen and flood checks use the address point. They do not establish building exposure or damage.</p>');
+  html+=floodCard();
+  html+=card('Documents we still need','<p>These details are specific to the building or deal. The public sources used here do not establish them.</p><ul class="verification"><li><strong>Seller or property manager</strong> — inspection, roof and upgrade records, plus any repair or damage disclosures.</li><li><strong>Broker or lender</strong> — a property-specific quote and any coverage or financing conditions.</li></ul>');
   html+=card('Hazard intelligence' ,'<p>Explore all 18 FEMA hazard types and the observed weather archive.</p><button class="secondary" data-go-tab="hazards">Open hazard overview →</button> <button class="secondary" data-go-tab="events">Explore events →</button>');
  }
  if(tab==='hazards'){
@@ -145,7 +152,7 @@ function renderEvents(){
 }
 function renderPortfolio(){
  $('portfolio-count').textContent=portfolio.size+' properties';
- $('portfolio').innerHTML=portfolio.size?'<table class="data-table"><thead><tr><th>Property</th><th>Parcel</th><th>Municipality</th><th>County reports</th><th>Building features</th><th></th></tr></thead><tbody>'+[...portfolio.values()].map(r=>'<tr><td><strong>'+esc(r.property.address)+'</strong></td><td>'+esc(r.property.parcel_id)+'</td><td>'+esc(r.property.jurisdiction)+'</td><td>'+r.core_record.events.length+'</td><td>Unknown</td><td><button class="secondary" data-remove="'+esc(r.property.id)+'">Remove</button></td></tr>').join('')+'</tbody></table>':'<p>No properties added yet. Search a property in Explore, then select Add to portfolio.</p>';
+ $('portfolio').innerHTML=portfolio.size?'<table class="data-table"><thead><tr><th>Property</th><th>Parcel</th><th>Municipality</th><th>Reports within 5 mi</th><th>Flood map check</th><th></th></tr></thead><tbody>'+[...portfolio.values()].map(r=>'<tr><td><strong>'+esc(r.property.address)+'</strong></td><td>'+esc(r.property.parcel_id)+'</td><td>'+esc(r.property.jurisdiction)+'</td><td>'+nearbyReports(r).length+'</td><td>'+esc(r.core_record.flood_map_checks?floodFinding(r.core_record.flood_map_checks):'Checking maps…')+'</td><td><button class="secondary" data-remove="'+esc(r.property.id)+'">Remove</button></td></tr>').join('')+'</tbody></table>':'<p>No properties added yet. Search a property in Explore, then select Add to portfolio.</p>';
  document.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{portfolio.delete(b.dataset.remove);renderPortfolio()}));
  $('save-property').textContent=portfolio.has(selected.id)?'✓ In portfolio':'＋ Add to portfolio';
 }

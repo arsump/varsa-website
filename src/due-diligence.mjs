@@ -1,3 +1,4 @@
+import {nearbyReports} from './deal-evidence.mjs';
 import {floodLabel,cityFloodGuide,femaMap} from './flood.mjs';
 export function verificationSteps(flood){
  return [
@@ -56,8 +57,11 @@ export async function makeDueDiligencePdf(record,flood,PDFLib){
  text(record.core_record.events.length+' county NOAA reports (2020-2024). '+(county?county.hazards.length+' FEMA county-level hazard ratings ('+county.version+').':'County hazard ratings unavailable.'),{size:10});
  const modeled=record.core_record.hazard_exposure.find(e=>Array.isArray(e.matched));
  if(modeled)text('Modeled hail: '+modeled.matched.length+' address-point intersections on '+modeled.dates.join(' / ')+' UTC. Two dates only.',{size:10});
+ const nearby=nearbyReports(record);
+ text(nearby.length+' mapped NOAA reports within 5 miles. Reported points are approximate and do not establish building impact.',{size:10});
+ if(nearby.length)text('Closest report: '+nearby[0].event.event_type+' | '+nearby[0].event.observed_at_local+' | '+nearby[0].miles.toFixed(1)+' mi',{size:10});
  text('Area-level data does not establish exposure, damage or insurance terms for this property.',{size:10});
- heading('What to verify');
+ heading('Deal follow-up');
  for(const [i,step] of verificationSteps(flood).entries()){text((i+1)+'. '+step.label,{font:bold,size:11});text(step.detail,{size:10});y-=3}
  start('Evidence and sources',2);
  heading('Location and flood mapping');
