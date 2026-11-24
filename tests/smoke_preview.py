@@ -9,16 +9,16 @@ with sync_playwright() as p:
     page.goto((root/'index.html').as_uri())
     for route in ['home','acquire','protect','operate','learn','research']:
         page.locator('a[href="#'+route+'"]').first.click()
-        assert page.locator('#'+route).is_visible(), route
+        page.locator('#'+route).wait_for(state='visible')
     page.locator('a[href="#acquire"]').first.click()
-    assert page.get_by_text('13 county weather reports in 2024').is_visible()
+    assert page.get_by_text('71 county weather reports').is_visible()
     page.locator('#query').fill('unsupported')
     page.get_by_role('button',name='Find record').click()
-    assert page.get_by_text('Address not covered',exact=False).is_visible()
+    assert page.get_by_text('Enter a Fort Collins street address',exact=False).is_visible()
     page.locator('#query').fill('Fort Collins City Hall')
     page.get_by_role('button',name='Find record').click()
     assert page.get_by_role('heading',name='Fort Collins City Hall').is_visible()
-    assert page.get_by_role('link',name='City source').is_visible()
+    assert page.get_by_role('link',name='Address source').is_visible()
     for width in [390,768,1440]:
         page.set_viewport_size({'width':width,'height':844})
         for route in ['home','acquire','protect','operate','learn','research']:

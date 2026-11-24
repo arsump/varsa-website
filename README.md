@@ -28,3 +28,6 @@ Static portable frontend today. Next: read-only API with validated core records 
 
 ## Government data checkpoint
 Run `python src/retrieve_pilot.py`, then `python src/ingest.py --archive audit/raw/storm-2024.csv.gz` and `python src/validate_pilot.py`, then `python src/build.py`. Download results are captured in audit/downloads.json. The operational MRMS file is rolling, so use the preserved raw snapshot for repeat validation if it expires. The archive of raw downloads is kept outside the public repository. See docs/DATA_CHECKPOINT_2026-11-24.md.
+
+## Citywide live lookup
+The preview uses government GIS queries in-browser for exact Fort Collins street addresses; source availability and data completeness apply. It does not bulk republish Colorado parcel data. Run `python src/ingest_history.py` to reproduce five-year NOAA archive normalization, and `python src/validate_addresses.py` to reproduce the bounded address sample checks. See docs/CITYWIDE_CHECKPOINT.md.
