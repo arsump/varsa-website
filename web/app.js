@@ -1,4 +1,4 @@
-import {matchBryanAddress} from '../src/acquisition.mjs';
+import {acquisitionDecision,matchBryanAddress} from '../src/acquisition.mjs';
 import {matchesPierAddress,daysAfterEvent} from '../src/recovery.mjs';
 import {assembleResilience} from '../src/core-record.mjs';
 import {evidenceEntry,evidenceTypes,readHistory,writeHistory} from '../src/property-history.mjs';
@@ -146,7 +146,9 @@ function renderTab(tab){
   const floodStatus=record.core_record.flood_map_checks?floodFinding(flood):'Checking published maps…';
   const hailStatus=hail?hail.matched.length+' mapped intersections across two UTC dates':'Address-point screen unavailable';
   const history=closest?'<p>Closest report: <strong>'+esc(closest.event.event_type)+'</strong> · '+esc(closest.event.observed_at_local)+' · '+closest.miles.toFixed(1)+' mi · '+sourceLink(closest.event.provenance.source_url,'NOAA record '+closest.event.id)+'</p>':'<p>No mapped reports found within five miles in the available archive.</p>';
-  html='<div class="grid two">'+Object.entries({hazards:'Hazards',protection:'Protection & standards',performance:'Performance',economics:'Economics'}).map(([name,title])=>card(title,layerHtml(name))).join('')+'</div>';
+  const decision=acquisitionDecision(record);
+  html=card('Acquisition decision','<h3>'+esc(decision.headline)+'</h3><p>'+esc(decision.reason)+'</p>');
+  html+='<details class="panel"><summary>Evidence by topic</summary><div class="grid two">'+Object.entries({hazards:'Hazards',protection:'Protection & standards',performance:'Performance',economics:'Economics'}).map(([name,title])=>card(title,layerHtml(name))).join('')+'</div></details>';
   const limits=record.core_record.resilience.application_limits;
   if(limits.length)html+=card('What the evidence supports','<ul>'+limits.map(limit=>'<li>'+esc(limit)+'</li>').join('')+'</ul>');
   html+=card('Sites · Acquisition context','<dl class="deal-findings"><div><dt>Parcel</dt><dd>'+esc(site.parcel_id||'No parcel match')+'</dd></div><div><dt>Flood maps</dt><dd>'+esc(floodStatus)+'</dd></div><div><dt>Modeled hail</dt><dd>'+esc(hailStatus)+'</dd></div><div><dt>Weather history</dt><dd>'+local.length+' reported locations within 5 mi</dd></div></dl>'+history+'<p class="scope">NOAA county event points, 2020–2024. Distance is measured to the reported event point, which may be approximate. The two-date hail screen and flood checks use the address point. They do not establish building exposure or damage.</p>');

@@ -4,3 +4,6 @@
 .history-form{display:grid;gap:12px;max-width:620px}.history-form label{display:grid;gap:4px;font-weight:650}.history-form input,.history-form textarea,.history-form select{font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:white;color:var(--ink)}.history-form textarea{min-height:74px;resize:vertical}.history-form button{justify-self:start}
 
 .workspace-actions[hidden]{display:none}
+
+#general-acquisition .map-panel{grid-column:1/-1}
+#general-acquisition #record-content{margin-top:0;min-width:0}

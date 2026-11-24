@@ -1,0 +1,29 @@
+{
+  "tax_years": [
+    "2026"
+  ],
+  "apartment_accounts": 871,
+  "apartment_parcels": 871,
+  "apartment_improvements": 1665,
+  "accounts_with_situs": 871,
+  "distinct_situs_addresses": 865,
+  "improvements_with_year_built": 1665,
+  "improvements_with_roof_cover": 1650,
+  "improvements_with_remodel_year": 124,
+  "permit_keyword_rows": 12,
+  "permit_address_matches": {},
+  "inputs": {
+    "assessor-public-account.csv": {
+      "bytes": 46871380,
+      "sha256": "1d358f37a29e537ee7aa2cf8fd786f2c1dc7a13d9e62177b709068cb04785d79"
+    },
+    "assessor-public-improvement.csv": {
+      "bytes": 46239312,
+      "sha256": "16174d2608ebf2642104d167c56a174636fb0f8b731d22a2719138dbbd7cdea9"
+    },
+    "permits.json": {
+      "bytes": 7195,
+      "sha256": "32ccd5f7364300caa1868697c02c45ab4b3a0f834ecf71d12aeab04569d02c5a"
+    }
+  }
+}

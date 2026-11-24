@@ -11,3 +11,11 @@ test('accepts three documented Bryan addresses without joining nearby properties
   assert.equal(matchBryanAddress('100 N Bryan Ave'),null);
   assert.equal(matchBryanAddress('100 S Bryan Ave, Denver, CO'),null);
 });
+
+test('mapped overlap is prioritized while an unavailable check stays unresolved', async () => {
+  const {acquisitionDecision}=await import('../src/acquisition.mjs');
+  const core_record={flood_map_checks:[{status:'intersection'}]};
+  assert.match(acquisitionDecision({core_record}).headline,/flood/);
+  assert.match(acquisitionDecision({core_record:{}}).reason,/does not establish/);
+  assert.match(acquisitionDecision({core_record:{flood_map_checks:[{status:'unavailable'}]}}).headline,/roof/);
+});
