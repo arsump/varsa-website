@@ -1,3 +1,4 @@
+import {evidenceEntry,evidenceTypes,readHistory,writeHistory} from '../src/property-history.mjs';
 import {nearbyReports,floodFinding} from '../src/deal-evidence.mjs';
 import {screenFlood,floodLabel,cityFloodGuide} from '../src/flood.mjs';
 import {makeDueDiligencePdf} from '../src/due-diligence.mjs';
@@ -93,9 +94,11 @@ function selectSite(site){
  const county=nri.counties[site.county_fips];
  const hail=screen(site);
  record={...base,core_record:{...base.core_record,regional_events:regional.map(e=>({...e,relationship:'regional forecast zone context; property impact unknown'})),hazard_exposure:[...base.core_record.hazard_exposure,...(county?[{...county,evidence_kind:nri.evidence_kind,source_url:nri.source_url,retrieved_at:nri.retrieved_at,limitations:nri.limitations}]:[]),...(hail?[hail]:[])]}};
+ record.core_record.property_history=readHistory(window.localStorage,site.id);
  $('property-summary').innerHTML='<span class="pill">'+(site.parcel_id?'Parcel matched':'Address matched')+'</span><h2>'+esc(site.name)+'</h2><p>'+esc(site.address)+'</p><div class="field"><b>Parcel ID</b>'+esc(site.parcel_id)+'</div><div class="field"><b>Municipality</b>'+esc(site.jurisdiction)+'</div><div class="field"><b>Evidence</b>Government address and GIS</div>';
- const shared='<span class="pill">Selected Property Record</span><h2>'+esc(site.name)+'</h2><p>'+esc(site.address)+' · Parcel '+esc(site.parcel_id)+'</p><a class="button secondary" href="#acquire">Open property record →</a>';
+ const shared='<span class="pill">Selected Property Record</span><h2>'+esc(site.name)+'</h2><p>'+esc(site.address)+' · Parcel '+esc(site.parcel_id)+'</p><a class="button secondary" href="#acquire">Open property record →</a> <a class="button secondary" href="#acquire" data-open-history>Property history</a>';
  $('protect-record').innerHTML=shared;$('operate-record').innerHTML=shared;
+ document.querySelectorAll('[data-open-history]').forEach(link=>link.addEventListener('click',()=>renderTab('history')));
  renderTab(activeTab);updateMap(true);renderPortfolio();
 }
 function sourceLink(url,label){return '<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(label)+'</a>'}
@@ -136,13 +139,40 @@ function renderTab(tab){
   html=card('Building characteristics','<div class="grid two">'+['Building footprint','Construction type','Roof material','Roof age','Protection features','Permit history'].map(t=>'<div class="metric-card"><small>'+t+'</small><strong style="font-size:20px">Unknown</strong></div>').join('')+'</div><p>City footprint and current permit sources are identified; reuse terms and building-level matching are under review.</p>');
   html+=card('Municipal requirements',record.core_record.requirements.length?record.core_record.requirements.map(r=>'<h3>'+esc(r.text)+'</h3><p>'+esc(r.applicability)+' · '+sourceLink(r.source_url,'Official source')+'</p>').join(''):'<p>Municipal jurisdiction or applicable requirements are unknown.</p>');
  }
+ if(tab==='history'){
+  const items=record.core_record.property_history;
+  const timeline=items.map(item=>'<article class="field"><span class="pill">'+esc(item.type)+'</span> <time>'+esc(item.date)+'</time><h3>'+esc(item.summary)+'</h3><p>Source reference: '+esc(item.source)+'</p><p>'+ (item.reviewed_at?'Marked source reviewed by user on '+esc(item.reviewed_at.slice(0,10)):'Reported by user · source review pending')+'</p><button class="secondary" data-review-entry="'+esc(item.id)+'">'+(item.reviewed_at?'Reset review status':'Mark source reviewed')+'</button></article>').join('');
+  html=card('Property history','<p>Keep a dated record of upgrades, inspection findings and observed outcomes. Entries and review status are user-entered. History is stored in this browser and included in the JSON record download. Use short source references without confidential details.</p>'+(timeline||'<p>No entries yet.</p>'));
+  html+=card('Add an evidence entry','<form id="add-evidence" class="history-form"><label>Evidence type<select name="type">'+evidenceTypes.map(type=>'<option>'+type+'</option>').join('')+'</select></label><label>Date of work, inspection or outcome<input type="date" name="date" required></label><label>Finding or change<textarea name="summary" required maxlength="300" placeholder="What did the source establish?"></textarea></label><label>Source reference<input name="source" required maxlength="120" placeholder="Document title, date or reference ID"></label><button>Save entry</button><p id="history-status" role="status"></p></form>');
+ }
  if(tab==='evidence'){
   html=card('Source register','<p>'+sourceLink(site.source_url,'State or city address source')+'</p><p>'+sourceLink(site.location_provenance.parcel_source,'State parcel source')+'</p><p>'+esc(site.location_provenance.attribution)+'</p>'+weather.archives.map(a=>'<p>'+sourceLink(a.source_url,'NOAA Storm Events '+a.year)+'</p>').join('')+'<p>'+sourceLink(nri.source_item,'FEMA National Risk Index data and terms')+'</p><p>'+esc(nri.attribution)+'</p><p>'+sourceLink(wildfire.source_item,'USFS community wildfire data')+'</p>');
   html+=card('Known gaps','<p>'+record.unknowns.map(esc).join(' · ')+'</p><p>Coordinates and parcel geometry are screening information; survey accuracy unknown.</p>');
  }
  $('record-content').innerHTML=html;
  document.querySelectorAll('[data-go-tab]').forEach(b=>b.addEventListener('click',()=>renderTab(b.dataset.goTab)));
+ if(tab==='history'){
+  $('add-evidence').addEventListener('submit',event=>{
+   event.preventDefault();
+   try{savePropertyHistory([...record.core_record.property_history,evidenceEntry(Object.fromEntries(new FormData(event.currentTarget)))]);}
+   catch(error){$('history-status').textContent=error.message;}
+  });
+  document.querySelectorAll('[data-review-entry]').forEach(button=>button.addEventListener('click',()=>{
+   try{savePropertyHistory(record.core_record.property_history.map(item=>item.id===button.dataset.reviewEntry?{...item,reviewed_at:item.reviewed_at?null:new Date().toISOString()}:item));}
+   catch(error){$('history-status').textContent=error.message;}
+  }));
+ }
  if(tab==='events'){for(const id of ['event-family','event-year','event-scope'])$(id).addEventListener('change',renderEvents);renderEvents()}
+}
+function savePropertyHistory(items){
+ try{writeHistory(window.localStorage,selected.id,items);}
+ catch{throw new Error('History could not be saved in this browser.');}
+ const saved=readHistory(window.localStorage,selected.id);
+ record.core_record.property_history=saved;
+ const portfolioRecord=portfolio.get(selected.id);
+ if(portfolioRecord)portfolioRecord.core_record.property_history=saved;
+ renderTab('history');renderPortfolio();
+ $('history-status').textContent='History saved.';
 }
 function renderEvents(){
  const family=$('event-family').value,year=$('event-year').value,scope=$('event-scope').value;
@@ -152,7 +182,7 @@ function renderEvents(){
 }
 function renderPortfolio(){
  $('portfolio-count').textContent=portfolio.size+' properties';
- $('portfolio').innerHTML=portfolio.size?'<table class="data-table"><thead><tr><th>Property</th><th>Parcel</th><th>Municipality</th><th>Reports within 5 mi</th><th>Flood map check</th><th></th></tr></thead><tbody>'+[...portfolio.values()].map(r=>'<tr><td><strong>'+esc(r.property.address)+'</strong></td><td>'+esc(r.property.parcel_id)+'</td><td>'+esc(r.property.jurisdiction)+'</td><td>'+nearbyReports(r).length+'</td><td>'+esc(r.core_record.flood_map_checks?floodFinding(r.core_record.flood_map_checks):'Checking maps…')+'</td><td><button class="secondary" data-remove="'+esc(r.property.id)+'">Remove</button></td></tr>').join('')+'</tbody></table>':'<p>No properties added yet. Search a property in Explore, then select Add to portfolio.</p>';
+ $('portfolio').innerHTML=portfolio.size?'<table class="data-table"><thead><tr><th>Property</th><th>Parcel</th><th>Municipality</th><th>Reports within 5 mi</th><th>Flood map check</th><th>Evidence entries</th><th></th></tr></thead><tbody>'+[...portfolio.values()].map(r=>'<tr><td><strong>'+esc(r.property.address)+'</strong></td><td>'+esc(r.property.parcel_id)+'</td><td>'+esc(r.property.jurisdiction)+'</td><td>'+nearbyReports(r).length+'</td><td>'+esc(r.core_record.flood_map_checks?floodFinding(r.core_record.flood_map_checks):'Checking maps…')+'</td><td>'+(r.core_record.property_history?.length||0)+'</td><td><button class="secondary" data-remove="'+esc(r.property.id)+'">Remove</button></td></tr>').join('')+'</tbody></table>':'<p>No properties added yet. Search a property in Explore, then select Add to portfolio.</p>';
  document.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{portfolio.delete(b.dataset.remove);renderPortfolio()}));
  $('save-property').textContent=portfolio.has(selected.id)?'✓ In portfolio':'＋ Add to portfolio';
 }
