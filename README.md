@@ -2,7 +2,7 @@
 
 Measure what lasts. Resilience intelligence for the built world.
 
-Open index.html in a browser. It is a portable generated build for review. The editable source lives in web/ (markup, theme and app), src/ (record assembly, ingest and build), data/ (pinned normalized evidence, schemas and verified pilot reference), and tests/.
+The hosted Netlify preview is the primary review entry point. For a local review, run `python -m http.server 8000` from the project root and open http://localhost:8000. The generated index uses same-origin modules and data files. The editable source lives in web/ (markup, theme and app), src/ (record assembly, ingest and build), data/ (pinned normalized evidence, schemas and verified pilot reference), and tests/.
 
 Try Acquire and search 300 Laporte Ave or Fort Collins City Hall. Only this one sourced address is covered. The record associates 13 2024 Larimer County reported events by county. No parcel geometry, wildfire rating, actual damage or insurance outcome is known. Protect and Operate are synthetic workflows. Learn is research.
 

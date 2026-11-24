@@ -1,54 +1,154 @@
-const esc = v => String(v??'Unknown').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+import {matchSite,makeRecord} from '../src/record.mjs';
+import {resolveAddress} from '../src/lookup.mjs';
+const esc=v=>String(v??'Unknown').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
 const routes=['home','acquire','protect','operate','learn','research'];
+const data=async n=>{const r=await fetch('data/'+n+'.json');if(!r.ok)throw Error(n);return r.json()};
+const [sites,rules,wildfire,weather,nri,footprints]=await Promise.all(['sites','rules','wildfire','multihazard','nri','hail-footprints'].map(data)).catch(error=>{
+ $('home-map').textContent='Property explorer data is temporarily unavailable. Reload to retry.';
+ $('home-map').setAttribute('role','status');
+ throw error;
+});
+const colors={'Hail':'#729744','Flood':'#2784a1','Wind':'#bd813d','Heavy rain':'#588bb5'};
+const types=[...new Set(weather.events.map(e=>e.family))].sort();
+const portfolio=new Map();
+let selected=sites[0],record,activeTab='overview',searchVersion=0,homeMap,explorerMap,pointLayer,footprintLayer,selectedLayer;
+const countyEvents=weather.events.filter(e=>e.scope==='county');
+const zoneEvents=weather.events.filter(e=>e.scope==='regional forecast zone');
+$('stat-events').textContent=weather.events.length;
+function createMap(id,zoom=10){
+ const map=L.map(id,{scrollWheelZoom:false}).setView([40.58,-105.08],zoom);
+ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+ return map;
+}
+function marker(e){
+ return L.circleMarker(e.point,{radius:5,color:'#fff',weight:1,fillColor:colors[e.family]||'#797b62',fillOpacity:.86}).bindPopup('<strong>'+esc(e.event_type)+'</strong><br>'+esc(e.observed_at_local)+'<br>'+esc(e.location_reported)+'<br>Reported event location · accuracy unknown');
+}
+function selectedMarker(map,site){
+ const c=site.coordinates;
+ return c?L.circleMarker([c.latitude,c.longitude],{radius:9,color:'#173d35',weight:3,fillColor:'#d7e98f',fillOpacity:1}).bindPopup('<strong>'+esc(site.address)+'</strong><br>Selected address point').addTo(map):null;
+}
+function initHome(){
+ if(homeMap)return;
+ homeMap=createMap('home-map',10);
+ countyEvents.filter(e=>e.point).forEach(e=>marker(e).addTo(homeMap));
+ selectedMarker(homeMap,sites[0]);
+}
+function initExplorer(){
+ if(explorerMap)return;
+ explorerMap=createMap('explorer-map',10);
+ pointLayer=L.layerGroup().addTo(explorerMap);
+ footprintLayer=L.geoJSON(footprints,{style:{color:'#6c9e4c',fillColor:'#a6cc72',fillOpacity:.5,weight:1.5},onEachFeature:(f,l)=>l.bindPopup('Modeled hail · '+esc(f.properties.date)+' UTC<br>'+esc(f.properties.hail_size_range_in)+' inches')});
+ updateMap(true);
+}
+function updateMap(recenter=false){
+ if(!explorerMap)return;
+ const family=$('map-hazard').value,year=$('map-year').value;
+ const events=countyEvents.filter(e=>e.point&&(family==='all'||e.family===family)&&(year==='all'||e.year===Number(year)));
+ pointLayer.clearLayers();events.forEach(e=>marker(e).addTo(pointLayer));
+ if($('show-footprint').checked){footprintLayer.addTo(explorerMap)}else explorerMap.removeLayer(footprintLayer);
+ if(selectedLayer)explorerMap.removeLayer(selectedLayer);
+ selectedLayer=selectedMarker(explorerMap,selected);
+ if(recenter&&selected.coordinates)explorerMap.setView([selected.coordinates.latitude,selected.coordinates.longitude],10);
+ $('map-summary').innerHTML='<span>'+events.length+' mapped reported locations · Larimer County</span><span><i class="legend-dot hail"></i> Hail</span><span><i class="legend-dot flood"></i> Flood</span><span><i class="legend-dot wind"></i> Wind</span><span>Selected point ≠ exposure</span>';
+}
 function route(){
- let id=location.hash.slice(1)||'home';
- if(!routes.includes(id))id='home';
- for(const r of routes)document.getElementById(r).hidden=r!==id;
+ const id=routes.includes(location.hash.slice(1))?location.hash.slice(1):'home';
+ for(const r of routes)$(r).hidden=r!==id;
+ document.querySelectorAll('.top nav a').forEach(a=>a.setAttribute('aria-current',a.hash==='#'+id?'page':'false'));
+ if(id==='home'){initHome();requestAnimationFrame(()=>homeMap.invalidateSize())}
+ if(id==='acquire'){initExplorer();requestAnimationFrame(()=>explorerMap.invalidateSize())}
  window.scrollTo(0,0);
 }
-window.addEventListener('hashchange',route);route();
-const input=document.getElementById('query'), result=document.getElementById('result'), form=document.getElementById('lookup');
-let selected=sites[0], searchVersion=0;
-function showShared(record){
- for(const id of ['protect-record','operate-record']){
-  document.getElementById(id).innerHTML='<article class="card"><small>SHARED PROPERTY RECORD · REPORTED DATA</small><h2>'+esc(record.property.name)+'</h2><p>'+esc(record.property.address)+'</p><p>Parcel '+esc(record.property.parcel_id)+' · '+record.core_record.events.length+' county reports in available archive</p><p>Protection, insurance and actual property impacts remain unknown.</p><a href="#acquire">Open sourced record →</a></article>';
- }
-}
-function renderRecord(site){
- selected=site;
- const record=makeRecord(site,archive.events,rules,wildfire);
- const events=record.core_record.events;
- const counts={};
- for(const e of events){const yr=e.year||2024;counts[yr]=(counts[yr]||0)+1;}
- const rows=events.map(e=>'<div class="record-row"><strong>'+esc(e.event_type)+' · '+esc(e.magnitude)+' '+esc(e.unit)+'</strong><br>'+esc(e.observed_at_local)+' · '+esc(e.location_reported)+'<br><small>NOAA EVENT '+esc(e.id)+' · '+esc(e.provenance.spatial_precision)+'</small> · <a href="'+esc(e.provenance.source_url)+'">Archive</a></div>').join('');
- const coverage=site.county_fips==='08069'?'Larimer County · 2020–2024 · hail and thunderstorm wind reports':'County history unavailable in current pilot';
- const provenance=site.location_provenance;
- const wildfireContext=site.jurisdiction===wildfire.place?'<h3>Wildfire · community context</h3><div class="grid two"><div><small>National burn-probability rank</small><h2>'+esc(wildfire.burn_probability_national_rank)+'</h2></div><div><small>National risk-to-homes rank</small><h2>'+esc(wildfire.risk_to_homes_national_rank)+'</h2></div></div><p>USFS modeled comparative community ranks. These percentages describe relative rank, and do not measure annual probability or the risk to this property. <a href="'+esc(wildfire.source_item)+'">USFS source and CC0 terms</a></p>':'';
- const model=site.footprint_screening?'<h3>Modeled hail footprint · July 20, 2024</h3><p>'+esc(site.footprint_screening.interpretation)+' <a href="'+esc(site.footprint_screening.source_url)+'">NOAA footprint data</a></p>':'<h3>Modeled hazard screening</h3><p>Hail footprint and wildfire screening have not been computed for this address.</p>';
- result.innerHTML='<article class="card"><small>GOVERNMENT ADDRESS RECORD · '+(site.parcel_id?'PARCEL MATCH':'PARCEL UNKNOWN')+'</small><h2>'+esc(site.name)+'</h2><p>'+esc(site.address)+' · <a href="'+esc(site.source_url)+'">Address source</a></p><div class="grid two"><div><strong>Parcel ID</strong><p>'+esc(site.parcel_id)+' · <a href="'+esc(provenance.parcel_source)+'">State parcel query</a></p><p>'+esc(provenance.parcel_status)+'</p></div><div><strong>Municipal jurisdiction</strong><p>'+esc(site.jurisdiction)+(provenance.city_limits_source?' · <a href="'+esc(provenance.city_limits_source)+'">Boundary check</a>':'')+'</p><p>'+esc(site.precision)+'</p></div></div><p class="muted">'+esc(provenance.attribution)+'</p><div class="notice">Weather reports are county context. Actual building exposure, damage, roof characteristics and wildfire screening remain unknown.</div><h3>'+events.length+' county weather reports</h3><p>'+coverage+'</p><div class="history-grid">'+Object.entries(counts).map(([year,n])=>'<div class="year"><small>'+year+'</small><strong>'+n+'</strong></div>').join('')+'</div><details><summary>View individual reports ('+events.length+')</summary>'+rows+'</details>'+model+wildfireContext+'<h3>Municipal rule context</h3>'+(record.core_record.requirements.length?record.core_record.requirements.map(r=>'<p>'+esc(r.text)+' <a href="'+esc(r.source_url)+'">Source</a><br><small>'+esc(r.applicability)+'</small></p>').join(''):'<p>Municipal applicability remains unknown.</p>')+'<h3>What to verify</h3><p>'+record.unknowns.map(esc).join(' · ')+'</p><button id="download-record">Download Property Record (JSON)</button></article>';
- document.getElementById('download-record').addEventListener('click',()=>{
-  const url=URL.createObjectURL(new Blob([JSON.stringify(record,null,2)],{type:'application/json'}));
-  const a=document.createElement('a');a.href=url;a.download=site.id+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+window.addEventListener('hashchange',route);
+function ringContains(x,y,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const [xi,yi]=ring[i],[xj,yj]=ring[j];if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)inside=!inside}return inside}
+function screen(site){
+ if(!site.coordinates)return null;
+ const {longitude:x,latitude:y}=site.coordinates;
+ const [west,south,east,north]=footprints.bbox;
+ if(x<west||x>east||y<south||y>north)return null;
+ const matched=footprints.features.filter(f=>{
+  const polys=f.geometry.type==='Polygon'?[f.geometry.coordinates]:f.geometry.type==='MultiPolygon'?f.geometry.coordinates:[];
+  return polys.some(p=>ringContains(x,y,p[0])&&!p.slice(1).some(r=>ringContains(x,y,r)));
  });
- showShared(record);
+ return {evidence_kind:'modeled hail point screening',dates:footprints.archives.map(a=>a.date),sources:footprints.archives,matched:matched.map(f=>f.properties),property_impact:'unknown',limitations:['Two UTC daily files only','Reported address point; not building or parcel geometry','Zero intersections does not establish no hail or no damage']};
 }
-const messages={invalid:'Enter a Fort Collins street address including a house number.',ambiguous:'Multiple exact government address points were returned. Add the unit or building designation and try again.',not_found:'No exact address found in the state source. Check spelling and street suffix.',no_point:'The government address matched but its coordinates are unavailable.',outside_city:'The address point is outside the Fort Collins municipal boundary.'};
-async function renderLookup(){
- const version=++searchVersion;
- const value=input.value;
- const local=matchSite(value,sites);
- if(local){renderRecord(local);return;}
- result.innerHTML='<div class="notice">Checking official Colorado address, parcel and city boundary services…</div>';
- try{
-  const response=await resolveAddress(value);
-  if(version!==searchVersion)return;
-  if(response.status==='found')renderRecord(response.site);
-  else result.innerHTML='<div class="notice">'+esc(messages[response.status])+' Previous selected record remains available in Protect and Operate.</div>';
- }catch(error){
-  if(version!==searchVersion)return;
-  result.innerHTML='<div class="notice">Government GIS lookup is temporarily unavailable. Try again or use the stored City Hall example (300 Laporte Ave).</div>';
+function selectSite(site){
+ selected=site;
+ const base=makeRecord(site,countyEvents,rules,wildfire);
+ const regional=site.county_fips==='08069'||site.county_fips==='08123'?zoneEvents:[];
+ const county=nri.counties[site.county_fips];
+ const hail=screen(site);
+ record={...base,core_record:{...base.core_record,regional_events:regional.map(e=>({...e,relationship:'regional forecast zone context; property impact unknown'})),hazard_exposure:[...base.core_record.hazard_exposure,...(county?[{...county,evidence_kind:nri.evidence_kind,source_url:nri.source_url,retrieved_at:nri.retrieved_at,limitations:nri.limitations}]:[]),...(hail?[hail]:[])]}};
+ $('property-summary').innerHTML='<span class="pill">'+(site.parcel_id?'Parcel matched':'Address matched')+'</span><h2>'+esc(site.name)+'</h2><p>'+esc(site.address)+'</p><div class="field"><b>Parcel ID</b>'+esc(site.parcel_id)+'</div><div class="field"><b>Municipality</b>'+esc(site.jurisdiction)+'</div><div class="field"><b>Evidence</b>Government address and GIS</div>';
+ const shared='<span class="pill">Selected Property Record</span><h2>'+esc(site.name)+'</h2><p>'+esc(site.address)+' · Parcel '+esc(site.parcel_id)+'</p><a class="button secondary" href="#acquire">Open property record →</a>';
+ $('protect-record').innerHTML=shared;$('operate-record').innerHTML=shared;
+ renderTab(activeTab);updateMap(true);renderPortfolio();
+}
+function sourceLink(url,label){return '<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(label)+'</a>'}
+function card(title,body){return '<article class="panel"><h2>'+title+'</h2>'+body+'</article>'}
+function rating(value){return '<span class="rating '+(String(value).includes('High')?'high':String(value).includes('Low')?'low':'')+'">'+esc(value)+'</span>'}
+function renderTab(tab){
+ activeTab=tab;
+ document.querySelectorAll('[data-record-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.recordTab===tab)));
+ const site=selected,county=nri.counties[site.county_fips],hail=screen(site);
+ const count=record.core_record.events.length,regional=record.core_record.regional_events.length;
+ let html='';
+ if(tab==='overview'){
+  html='<div class="grid">'+[['County reports',count,'2020–2024 · reported weather'],['Regional zone reports',regional,'Context only · multi-county zones'],['Hazard ratings',county?.hazards.length??'Unknown','FEMA county-scale planning index']].map(([a,b,c])=>'<div class="metric-card"><small>'+a+'</small><strong>'+b+'</strong><span class="scope">'+c+'</span></div>').join('')+'</div>';
+  html+=card('Property snapshot','<div class="grid two"><div><h3>Location</h3><p>'+esc(site.location_provenance.parcel_status)+'</p><p>'+esc(site.precision)+'</p></div><div><h3>Building evidence</h3><p>Building type, roof characteristics and protection features are currently unknown.</p></div></div><div class="notice">Reported events and county ratings provide area context. Actual building exposure, damage, insurance terms and outcomes remain unknown.</div>');
+  html+=card('Hazard intelligence','<p>Explore all 18 FEMA hazard types and the observed weather archive.</p><button class="secondary" data-go-tab="hazards">Open hazard overview →</button> <button class="secondary" data-go-tab="events">Explore events →</button>');
  }
+ if(tab==='hazards'){
+  html=card('All-hazard index',county?'<p>'+esc(county.county)+' County · FEMA National Risk Index · '+esc(county.version)+'</p><div class="table-scroll"><table class="data-table"><thead><tr><th>Hazard</th><th>County relative rating</th><th>Property-level evidence</th></tr></thead><tbody>'+county.hazards.map(h=>'<tr><td>'+esc(h.family)+'</td><td>'+rating(h.rating)+'</td><td>'+ (h.family==='Hail'&&hail?'Two-date modeled point screen':'Unknown')+'</td></tr>').join('')+'</tbody></table></div><p class="scope">County planning ratings. '+esc(nri.attribution)+' '+sourceLink(nri.source_url,'Source')+'</p>':'<p>County index coverage unavailable for this property.</p>');
+  if(hail)html+=card('Modeled hail footprint','<p>'+hail.matched.length+' polygon intersections at the published address point across '+hail.dates.join(' and ')+' UTC. Zero intersections cannot establish absence of hail or damage.</p>'+hail.sources.map(a=>'<p>'+sourceLink(a.source_url,a.date+' NOAA footprint')+'</p>').join(''));
+  if(site.jurisdiction===wildfire.place)html+=card('Wildfire · community context','<div class="grid two"><div class="metric-card"><small>National burn-probability rank</small><strong>'+esc(wildfire.burn_probability_national_rank)+'</strong></div><div class="metric-card"><small>National risk-to-homes rank</small><strong>'+esc(wildfire.risk_to_homes_national_rank)+'</strong></div></div><p>USFS relative community ranks, not annual fire probability or property-specific risk. '+sourceLink(wildfire.source_item,'USFS source and terms')+'</p>');
+  html+=card('Coverage beyond the index','<p>Sea-level rise, erosion, subsidence, snow load and other specialized hazards require geographic and engineering datasets. Values are unknown in this preview.</p>');
+ }
+ if(tab==='events'){
+  html=card('Historical event explorer','<div class="filter-row"><label>Hazard <select id="event-family"><option value="all">All hazards</option>'+types.map(t=>'<option>'+esc(t)+'</option>').join('')+'</select></label><label>Year <select id="event-year"><option value="all">All years</option>'+[2020,2021,2022,2023,2024].map(y=>'<option>'+y+'</option>').join('')+'</select></label><label>Geographic scope <select id="event-scope"><option value="all">County + regional zones</option><option value="county">County only</option><option value="regional forecast zone">Regional zones only</option></select></label></div><p class="scope">Area reports are not evidence that the selected property experienced an event.</p><div id="event-count"></div><div id="event-list" class="event-list"></div>');
+ }
+ if(tab==='building'){
+  html=card('Building characteristics','<div class="grid two">'+['Building footprint','Construction type','Roof material','Roof age','Protection features','Permit history'].map(t=>'<div class="metric-card"><small>'+t+'</small><strong style="font-size:20px">Unknown</strong></div>').join('')+'</div><p>City footprint and current permit sources are identified; reuse terms and building-level matching are under review.</p>');
+  html+=card('Municipal requirements',record.core_record.requirements.length?record.core_record.requirements.map(r=>'<h3>'+esc(r.text)+'</h3><p>'+esc(r.applicability)+' · '+sourceLink(r.source_url,'Official source')+'</p>').join(''):'<p>Municipal jurisdiction or applicable requirements are unknown.</p>');
+ }
+ if(tab==='evidence'){
+  html=card('Source register','<p>'+sourceLink(site.source_url,'State or city address source')+'</p><p>'+sourceLink(site.location_provenance.parcel_source,'State parcel source')+'</p><p>'+esc(site.location_provenance.attribution)+'</p>'+weather.archives.map(a=>'<p>'+sourceLink(a.source_url,'NOAA Storm Events '+a.year)+'</p>').join('')+'<p>'+sourceLink(nri.source_item,'FEMA National Risk Index data and terms')+'</p><p>'+esc(nri.attribution)+'</p><p>'+sourceLink(wildfire.source_item,'USFS community wildfire data')+'</p>');
+  html+=card('Known gaps','<p>'+record.unknowns.map(esc).join(' · ')+'</p><p>Coordinates and parcel geometry are screening information; survey accuracy unknown.</p>');
+ }
+ $('record-content').innerHTML=html;
+ document.querySelectorAll('[data-go-tab]').forEach(b=>b.addEventListener('click',()=>renderTab(b.dataset.goTab)));
+ if(tab==='events'){for(const id of ['event-family','event-year','event-scope'])$(id).addEventListener('change',renderEvents);renderEvents()}
 }
-form.addEventListener('submit',e=>{e.preventDefault();renderLookup()});
-renderRecord(selected);
-document.getElementById('research-data').innerHTML='<div class="grid two"><article class="card"><small>IMPORTED · HISTORICAL REPORTS</small><h3>NOAA Storm Events</h3><p>'+archive.events.length+' reports · '+esc(archive.coverage)+'</p><p>Imported '+esc(archive.ingested_at)+'</p>'+archive.archives.map(a=>'<p><a href="'+esc(a.source_url)+'">'+a.year+' source archive</a></p>').join('')+'</article><article class="card"><small>LIVE LOOKUP · SOURCE-LINKED</small><h3>Colorado GIS</h3><p>Exact address matching and point-to-parcel intersection, with a municipal boundary check. Coverage depends on source completeness and availability.</p><a href="https://gis.colorado.gov/public/rest/services/Address_and_Parcel">State GIS services</a></article><article class="card"><small>DOWNLOADED · VALIDATED GEOMETRY</small><h3>NOAA Event Footprint Catalog</h3><p>4,173 modeled hail polygons for July 20, 2024. City Hall point intersection checked.</p><a href="https://storage.googleapis.com/noaa-ncei-ipg/datasets/event-catalog/hail/mrms_hail_data_2024-07-20.geojson">Daily footprint</a></article><article class="card"><small>DOWNLOADED · FORMAT VALIDATED</small><h3>NOAA MRMS</h3><p>MESH GRIB2 sample. Grid values not decoded.</p><a href="https://mrms.ncep.noaa.gov/data/2D/MESH/">NCEP archive</a></article><article class="card"><small>RESEARCH · DATA RIGHTS REVIEWED</small><h3>USFS Wildfire Risk to Communities</h3><p>CC0 community-level modeled ranks retrieved and linked to confirmed Fort Collins records. Property-level raster screening remains pending.</p><a href="https://doi.org/10.2737/RDS-2020-0016-2">Research Data Archive</a></article></div>';
+function renderEvents(){
+ const family=$('event-family').value,year=$('event-year').value,scope=$('event-scope').value;
+ const list=[...record.core_record.events,...record.core_record.regional_events].filter(e=>(family==='all'||e.family===family)&&(year==='all'||e.year===Number(year))&&(scope==='all'||e.scope===scope)).sort((a,b)=>b.year-a.year||Number(b.id)-Number(a.id));
+ $('event-count').textContent=list.length+' matching reports';
+ $('event-list').innerHTML=list.map(e=>'<div class="event"><div class="event-date">'+esc(e.observed_at_local)+'</div><div><strong>'+esc(e.event_type)+'</strong><p>'+esc(e.location_reported)+' · '+esc(e.scope)+'</p></div><span class="badge">'+esc(e.magnitude==null?'':e.magnitude+' '+e.unit)+'</span>'+sourceLink(e.provenance.source_url,'Source')+'</div>').join('')||'<p>No matching reports in this filtered archive.</p>';
+}
+function renderPortfolio(){
+ $('portfolio-count').textContent=portfolio.size+' properties';
+ $('portfolio').innerHTML=portfolio.size?'<table class="data-table"><thead><tr><th>Property</th><th>Parcel</th><th>Municipality</th><th>County reports</th><th>Building features</th><th></th></tr></thead><tbody>'+[...portfolio.values()].map(r=>'<tr><td><strong>'+esc(r.property.address)+'</strong></td><td>'+esc(r.property.parcel_id)+'</td><td>'+esc(r.property.jurisdiction)+'</td><td>'+r.core_record.events.length+'</td><td>Unknown</td><td><button class="secondary" data-remove="'+esc(r.property.id)+'">Remove</button></td></tr>').join('')+'</tbody></table>':'<p>No properties added yet. Search a property in Explore, then select Add to portfolio.</p>';
+ document.querySelectorAll('[data-remove]').forEach(b=>b.addEventListener('click',()=>{portfolio.delete(b.dataset.remove);renderPortfolio()}));
+ $('save-property').textContent=portfolio.has(selected.id)?'✓ In portfolio':'＋ Add to portfolio';
+}
+const messages={invalid:'Enter a Fort Collins street address including a house number.',ambiguous:'Multiple exact address matches. Add unit or building details.',not_found:'No exact address found. Check spelling and street suffix.',no_point:'Address matched, but coordinates are unavailable.',outside_city:'Address is outside the Fort Collins municipal boundary.'};
+async function lookup(value){
+ const version=++searchVersion;$('query').value=value;
+ $('lookup-status').innerHTML='<div class="notice">Checking official address, parcel and boundary services…</div>';
+ try{
+  const local=matchSite(value,sites);const response=local?{status:'found',site:local}:await resolveAddress(value);
+  if(version!==searchVersion)return;
+  if(response.status==='found'){$('lookup-status').innerHTML='';selectSite(response.site)}else $('lookup-status').innerHTML='<div class="notice">'+esc(messages[response.status])+' The previous record is retained.</div>';
+ }catch(e){if(version===searchVersion)$('lookup-status').innerHTML='<div class="notice">Government GIS temporarily unavailable. Try again or choose City Hall.</div>'}
+}
+$('lookup').addEventListener('submit',e=>{e.preventDefault();lookup($('query').value)});
+$('home-search').addEventListener('submit',e=>{e.preventDefault();location.hash='acquire';lookup($('home-query').value)});
+document.querySelectorAll('[data-address]').forEach(b=>b.addEventListener('click',()=>{location.hash='acquire';lookup(b.dataset.address)}));
+document.querySelectorAll('[data-record-tab]').forEach(b=>b.addEventListener('click',()=>renderTab(b.dataset.recordTab)));
+for(const id of ['map-hazard','map-year','show-footprint'])$(id).addEventListener('change',()=>updateMap());
+$('save-property').addEventListener('click',()=>{portfolio.set(selected.id,record);renderPortfolio()});
+$('download-record').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(record,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=selected.id+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$('print-record').addEventListener('click',()=>{const old=activeTab;renderTab('overview');window.print();renderTab(old)});
+$('research-data').innerHTML=[['NOAA Storm Events',weather.events.length+' county and regional weather reports, 2020–2024.',weather.archives[0].source_url],['FEMA National Risk Index','18 hazard ratings across Larimer and Weld County. December 2025.',nri.source_item],['NOAA Event Footprint Catalog','Two UTC days of radar-derived hail polygons.',footprints.archives[0].source_url],['USFS Wildfire Risk to Communities','CC0 modeled community ranks, 2024 data.',wildfire.source_item],['Colorado address and parcels','Live state address and parcel queries with municipal boundary checks.','https://gis.colorado.gov/public/rest/services/Address_and_Parcel'],['Building evidence','City building and permit datasets identified; rights and applicability pending.','https://www.arcgis.com/home/item.html?id=7e577a14c83f4d83a6b58657c48027da']].map(([t,p,u])=>'<article class="panel"><span class="pill">Source linked</span><h3>'+esc(t)+'</h3><p>'+esc(p)+'</p>'+sourceLink(u,'Explore source ↗')+'</article>').join('');
+selectSite(sites[0]);route();
