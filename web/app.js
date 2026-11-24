@@ -1,3 +1,5 @@
+import {screenFlood,floodLabel,cityFloodGuide} from '../src/flood.mjs';
+import {makeDueDiligencePdf,verificationSteps} from '../src/due-diligence.mjs';
 import {matchSite,makeRecord} from '../src/record.mjs';
 import {resolveAddress} from '../src/lookup.mjs';
 const esc=v=>String(v??'Unknown').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -13,6 +15,7 @@ const colors={'Hail':'#729744','Flood':'#2784a1','Wind':'#bd813d','Heavy rain':'
 const types=[...new Set(weather.events.map(e=>e.family))].sort();
 const portfolio=new Map();
 let selected=sites[0],record,activeTab='overview',searchVersion=0,homeMap,explorerMap,pointLayer,footprintLayer,selectedLayer;
+let flood=[],floodRequest=Promise.resolve();
 const countyEvents=weather.events.filter(e=>e.scope==='county');
 const zoneEvents=weather.events.filter(e=>e.scope==='regional forecast zone');
 $('stat-events').textContent=weather.events.length;
@@ -75,6 +78,14 @@ function screen(site){
 }
 function selectSite(site){
  selected=site;
+ flood=[];
+ const selection=site;
+ floodRequest=screenFlood(site).then(results=>{
+  if(selected!==selection||floodRequest!==request)return;
+  flood=results;record.core_record.flood_map_checks=results;
+  if(activeTab==='overview'||activeTab==='hazards')renderTab(activeTab);
+ });
+ const request=floodRequest;
  const base=makeRecord(site,countyEvents,rules,wildfire);
  const regional=site.county_fips==='08069'||site.county_fips==='08123'?zoneEvents:[];
  const county=nri.counties[site.county_fips];
@@ -88,6 +99,10 @@ function selectSite(site){
 function sourceLink(url,label){return '<a href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(label)+'</a>'}
 function card(title,body){return '<article class="panel"><h2>'+title+'</h2>'+body+'</article>'}
 function rating(value){return '<span class="rating '+(String(value).includes('High')?'high':String(value).includes('Low')?'low':'')+'">'+esc(value)+'</span>'}
+function floodCard(){
+ const items=flood.map(item=>'<div class="field"><b>'+esc(item.name)+'</b>'+esc(floodLabel(item))+' · '+sourceLink(item.source_url,'GIS source')+'</div>').join('');
+ return card('Flood map check',(items||'<p>Checking maps, or coverage unavailable for this location.</p>')+'<p>Published address point only. Review effective city and FEMA maps for the full parcel and building. '+sourceLink(cityFloodGuide,'Local floodplain guidance')+'</p>');
+}
 function renderTab(tab){
  activeTab=tab;
  document.querySelectorAll('[data-record-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.recordTab===tab)));
@@ -97,10 +112,12 @@ function renderTab(tab){
  if(tab==='overview'){
   html='<div class="grid">'+[['County reports',count,'2020–2024 · reported weather'],['Regional zone reports',regional,'Context only · multi-county zones'],['Hazard ratings',county?.hazards.length??'Unknown','FEMA county-scale planning index']].map(([a,b,c])=>'<div class="metric-card"><small>'+a+'</small><strong>'+b+'</strong><span class="scope">'+c+'</span></div>').join('')+'</div>';
   html+=card('Property snapshot','<div class="grid two"><div><h3>Location</h3><p>'+esc(site.location_provenance.parcel_status)+'</p><p>'+esc(site.precision)+'</p></div><div><h3>Building evidence</h3><p>Building type, roof characteristics and protection features are currently unknown.</p></div></div><div class="notice">Reported events and county ratings provide area context. Actual building exposure, damage, insurance terms and outcomes remain unknown.</div>');
-  html+=card('Hazard intelligence','<p>Explore all 18 FEMA hazard types and the observed weather archive.</p><button class="secondary" data-go-tab="hazards">Open hazard overview →</button> <button class="secondary" data-go-tab="events">Explore events →</button>');
+  html+=floodCard()+card('What to verify','<ol class="verification">'+verificationSteps(flood).map(s=>'<li><strong>'+esc(s.label)+'</strong><p>'+esc(s.detail)+(s.url?' '+sourceLink(s.url,'Official guidance'):'')+'</p></li>').join('')+'</ol>');
+  html+=card('Hazard intelligence' ,'<p>Explore all 18 FEMA hazard types and the observed weather archive.</p><button class="secondary" data-go-tab="hazards">Open hazard overview →</button> <button class="secondary" data-go-tab="events">Explore events →</button>');
  }
  if(tab==='hazards'){
   html=card('All-hazard index',county?'<p>'+esc(county.county)+' County · FEMA National Risk Index · '+esc(county.version)+'</p><div class="table-scroll"><table class="data-table"><thead><tr><th>Hazard</th><th>County relative rating</th><th>Property-level evidence</th></tr></thead><tbody>'+county.hazards.map(h=>'<tr><td>'+esc(h.family)+'</td><td>'+rating(h.rating)+'</td><td>'+ (h.family==='Hail'&&hail?'Two-date modeled point screen':'Unknown')+'</td></tr>').join('')+'</tbody></table></div><p class="scope">County planning ratings. '+esc(nri.attribution)+' '+sourceLink(nri.source_url,'Source')+'</p>':'<p>County index coverage unavailable for this property.</p>');
+  html+=floodCard();
   if(hail)html+=card('Modeled hail footprint','<p>'+hail.matched.length+' polygon intersections at the published address point across '+hail.dates.join(' and ')+' UTC. Zero intersections cannot establish absence of hail or damage.</p>'+hail.sources.map(a=>'<p>'+sourceLink(a.source_url,a.date+' NOAA footprint')+'</p>').join(''));
   if(site.jurisdiction===wildfire.place)html+=card('Wildfire · community context','<div class="grid two"><div class="metric-card"><small>National burn-probability rank</small><strong>'+esc(wildfire.burn_probability_national_rank)+'</strong></div><div class="metric-card"><small>National risk-to-homes rank</small><strong>'+esc(wildfire.risk_to_homes_national_rank)+'</strong></div></div><p>USFS relative community ranks, not annual fire probability or property-specific risk. '+sourceLink(wildfire.source_item,'USFS source and terms')+'</p>');
   html+=card('Coverage beyond the index','<p>Sea-level rise, erosion, subsidence, snow load and other specialized hazards require geographic and engineering datasets. Values are unknown in this preview.</p>');
@@ -149,6 +166,17 @@ document.querySelectorAll('[data-record-tab]').forEach(b=>b.addEventListener('cl
 for(const id of ['map-hazard','map-year','show-footprint'])$(id).addEventListener('change',()=>updateMap());
 $('save-property').addEventListener('click',()=>{portfolio.set(selected.id,record);renderPortfolio()});
 $('download-record').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(record,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=selected.id+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
-$('print-record').addEventListener('click',()=>{const old=activeTab;renderTab('overview');window.print();renderTab(old)});
+$('print-record').addEventListener('click',async()=>{
+ const button=$('print-record'),current=record,pending=floodRequest;
+ button.disabled=true;button.textContent='Preparing PDF…';
+ try{
+  await pending;
+  if(record!==current){$('lookup-status').textContent='Property changed. Select Download PDF again for this address.';return}
+  const bytes=await makeDueDiligencePdf(current,flood,window.PDFLib);
+  const url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+  const a=document.createElement('a');a.href=url;a.download='varsa-'+current.property.id+'-due-diligence.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ }catch{$('lookup-status').textContent='The PDF could not be generated. Try again.'}
+ finally{button.disabled=false;button.textContent='Download PDF'}
+});
 $('research-data').innerHTML=[['NOAA Storm Events',weather.events.length+' county and regional weather reports, 2020–2024.',weather.archives[0].source_url],['FEMA National Risk Index','18 hazard ratings across Larimer and Weld County. December 2025.',nri.source_item],['NOAA Event Footprint Catalog','Two UTC days of radar-derived hail polygons.',footprints.archives[0].source_url],['USFS Wildfire Risk to Communities','CC0 modeled community ranks, 2024 data.',wildfire.source_item],['Colorado address and parcels','Live state address and parcel queries with municipal boundary checks.','https://gis.colorado.gov/public/rest/services/Address_and_Parcel'],['Building evidence','City building and permit datasets identified; rights and applicability pending.','https://www.arcgis.com/home/item.html?id=7e577a14c83f4d83a6b58657c48027da']].map(([t,p,u])=>'<article class="panel"><span class="pill">Source linked</span><h3>'+esc(t)+'</h3><p>'+esc(p)+'</p>'+sourceLink(u,'Explore source ↗')+'</article>').join('');
 selectSite(sites[0]);route();
