@@ -1,0 +1,10 @@
+{
+  "addresses": 865,
+  "multiple_exact_points": 438,
+  "no_exact_point": 376,
+  "exact_point_one_footprint": 26,
+  "exact_point_no_footprint": 14,
+  "exact_point_outside_boundary": 11,
+  "distinct_single_candidate_footprints": 26,
+  "inventory_sha256": "95fcd6ced1c8934d6d95364433eab4c3c7c635b425567397c535948edfccc9d1"
+}
